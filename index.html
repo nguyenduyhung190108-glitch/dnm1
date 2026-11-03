@@ -1,416 +1,274 @@
 <!DOCTYPE html>
 <html lang="vi"><head><meta charset="utf-8">
+<meta name="theme-color" content="#04182b">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Dynamic NEU – Trợ lý sinh viên</title>
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 <style>
-html{background:#17235f}
-:root{--bg:#eef4fa;--surface:#fff;--ink:#0f1f3d;--muted:#566784;--line:#d5e0ee;--brand:#0e5fa8;--brand-ink:#fff;--accent:#e9c46a;--accent-ink:#0f1f3d;--soft:#e3eef9;
-box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#06182b;--surface:#0c2742;--ink:#e8f1fb;--muted:#9bb4d1;--line:#1d3d5f;--brand:#4fd1c5;--brand-ink:#04202b;--accent:#e9c46a;--accent-ink:#0f1f3d;--soft:#12304f}}
-:root[data-theme="dark"]{--bg:#06182b;--surface:#0c2742;--ink:#e8f1fb;--muted:#9bb4d1;--line:#1d3d5f;--brand:#4fd1c5;--brand-ink:#04202b;--accent:#e9c46a;--accent-ink:#0f1f3d;--soft:#12304f}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.6}
+/* ============================================================
+   DYNAMIC NEU — Design System
+   Màu: biển sâu (#04182b) + vàng đồng (#e9c46a) + ngọc lam (#5fd3e0)
+   ============================================================ */
+:root{
+  --bg:#04182b;
+  --bg-soft:#071f36;
+  --surface:#0b2542;
+  --surface-2:#0e2c4d;
+  --ink:#eaf3fb;
+  --muted:#a3bad3;
+  --line:rgba(233,196,106,.18);
+  --line-strong:rgba(233,196,106,.38);
+  --brand:#5fd3e0;
+  --brand-ink:#04202b;
+  --accent:#e9c46a;
+  --accent-ink:#14233a;
+  --danger:#e8452c;
+  --ok:#18a37b;
+  --soft:#123456;
+  --radius-sm:10px;
+  --radius:16px;
+  --radius-lg:22px;
+  --shadow-sm:0 6px 18px -12px rgba(0,0,0,.7);
+  --shadow:0 18px 40px -24px rgba(0,0,0,.85);
+  --shadow-lg:0 28px 60px -30px rgba(0,0,0,.9);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{background:#04182b;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  margin:0;
+  font-family:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color:var(--ink);
+  line-height:1.65;
+  background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  min-height:100vh;
+}
+/* Nền biển sâu tĩnh lặng, không dùng ảnh base64 nặng */
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;
+  background:
+    radial-gradient(1200px 600px at 15% -10%, rgba(95,211,224,.10), transparent 60%),
+    radial-gradient(900px 500px at 110% 10%, rgba(233,196,106,.08), transparent 55%),
+    linear-gradient(180deg,#04182b 0%,#04182b 60%,#03121f 100%);
+}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+img{max-width:100%;display:block}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+
+/* ---------- Layout ---------- */
 .wrap{max-width:1040px;margin:0 auto;padding:0 20px}
-.top{background:#0b2a6f;color:#fff}
-.top .wrap{display:flex;justify-content:space-between;align-items:center;padding-top:16px;padding-bottom:16px}
-.logo{font-weight:800;font-size:1.2rem;letter-spacing:-.02em}.logo b{color:#ffc21a}
-.top nav a{color:#dbe4ff;text-decoration:none;margin-left:18px;font-size:.92rem}
-.top nav a:hover,.top nav a:focus-visible{color:#ffc21a;text-decoration:underline}
-.hero{background:#0b2a6f;color:#fff;padding:26px 0 54px}
-h1{font-size:clamp(2.1rem,5.6vw,3.7rem);line-height:1.06;letter-spacing:-.03em;margin:0 0 14px;font-weight:800;max-width:15ch}
-.hero p{max-width:50ch;color:#dbe4ff;margin:0 0 20px;font-size:1.05rem}
-.cta{display:inline-block;background:#ffc21a;color:#0d1b3d;font-weight:700;text-decoration:none;padding:12px 22px;border-radius:12px}
-.cta:focus-visible,button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #ffc21a;outline-offset:2px}
-.tools{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px;margin-top:0;box-shadow:0 12px 34px -22px rgba(11,42,111,.6)}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-.tab{border:1px solid var(--line);background:transparent;color:var(--ink);padding:9px 16px;border-radius:999px;font:inherit;font-size:.92rem;cursor:pointer}
-.tab[aria-pressed="true"]{background:var(--brand);color:var(--brand-ink);border-color:var(--brand);font-weight:700}
-.row{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
-.row label{font-size:.88rem;font-weight:500}
-input[type=range]{accent-color:var(--brand);width:200px;vertical-align:middle}
-.count{color:var(--muted);font-size:.88rem;margin-left:auto}
-section{padding:36px 0}
-h2{font-size:clamp(1.5rem,3.4vw,2.1rem);letter-spacing:-.02em;margin:0 0 6px}
-.lead{color:var(--muted);margin:0 0 20px;max-width:62ch}
-.list{display:grid;gap:12px}
-.card{display:grid;grid-template-columns:92px 1fr auto;gap:14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px}
-.dist{text-align:center;background:var(--soft);border-radius:12px;padding:8px 4px;font-weight:800;line-height:1.15}
-.dist small{display:block;font-weight:500;color:var(--muted);font-size:.72rem}
-.card h3{margin:0;font-size:1.02rem}
-.card .a{color:var(--muted);font-size:.9rem}
-.card .meta{font-size:.88rem;margin-top:3px}
-.tag{display:inline-block;background:var(--soft);border-radius:8px;padding:1px 9px;font-size:.78rem;margin-right:6px}
-.map{background:var(--brand);color:var(--brand-ink);text-decoration:none;font-weight:700;font-size:.88rem;padding:9px 14px;border-radius:10px;white-space:nowrap}
-.sep{margin:18px 0 4px;font-weight:700;color:var(--muted);font-size:.92rem}
-.bus{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
-.route{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px}
-.route .no{display:inline-block;background:#ffc21a;color:#0d1b3d;font-weight:800;border-radius:8px;padding:1px 10px;margin-right:8px}
-.route small{display:block;color:var(--muted);margin-top:4px}
-.note{background:var(--soft);border-radius:14px;padding:12px 16px;color:var(--muted);font-size:.9rem;margin-top:16px}
-footer{border-top:1px solid var(--line);padding:26px 0 40px;color:var(--muted);font-size:.85rem}
-@media(max-width:640px){.card{grid-template-columns:76px 1fr}.map{grid-column:1/-1;text-align:center}.top nav a:not(:last-child){display:none}.count{margin-left:0}}
-
-label.l{font-size:.88rem;font-weight:500;display:flex;justify-content:space-between;margin-top:6px}
-input[type=number],input[type=text],select.sel{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit;margin:6px 0 12px;min-width:0}
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px}
-.panel h3{margin:0 0 4px;font-size:1.1rem}.sub{color:var(--muted);font-size:.9rem;margin:0 0 14px}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
-.btn{background:var(--brand);color:var(--brand-ink);border:0;border-radius:12px;padding:12px 18px;font:inherit;font-weight:700;cursor:pointer}
-.btn.full{width:100%}.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
-.chip{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:7px 14px;font:inherit;font-size:.88rem;cursor:pointer;margin:0 6px 8px 0}
-.chip[aria-pressed="true"]{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
-.dish{display:flex;justify-content:space-between;gap:12px;align-items:center;background:var(--soft);border-radius:14px;padding:12px 14px;margin-top:10px}
-.dish small{display:block;color:var(--muted)}.price{font-weight:800;white-space:nowrap}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px}
-.kpi{background:var(--soft);border-radius:14px;padding:10px 12px}.kpi small{display:block;color:var(--muted);font-size:.78rem}.kpi b{font-size:1.08rem}
-.verdict{border-radius:14px;padding:12px 14px;font-weight:700;margin-bottom:12px}
-.v-good{background:#d6f5e3;color:#0b5132}.v-mid{background:#fff0c2;color:#6b4a00}.v-bad{background:#ffd9d3;color:#7a1a0c}
-.donut{width:150px;height:150px;border-radius:50%;margin:6px auto 12px;position:relative}
-.donut:after{content:"";position:absolute;inset:34px;background:var(--surface);border-radius:50%}
-.brow{margin:8px 0;font-size:.88rem}.brow .t{display:flex;justify-content:space-between;gap:8px}
-.track{height:10px;background:var(--soft);border-radius:99px;position:relative;margin-top:3px}
-.track i{display:block;height:100%;border-radius:99px}.track u{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink);opacity:.55}
-.exp{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);font-size:.9rem}
-.exp button{border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:1.1rem}
-.tips{margin:8px 0 0;padding-left:18px;color:var(--ink);font-size:.92rem}.tips li{margin:5px 0}
-.chat{display:flex;flex-direction:column;gap:10px;max-height:280px;overflow:auto;margin-bottom:12px}
-.msg{padding:10px 14px;border-radius:14px;max-width:90%;font-size:.93rem}
-.msg.ai{background:var(--soft);align-self:flex-start}.msg.me{background:var(--brand);color:var(--brand-ink);align-self:flex-end}
-.ask{display:flex;gap:8px}.ask input{margin:0;flex:1}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-.svc{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px}.svc h3{margin:6px 0 4px;font-size:1rem}.svc p{margin:0;color:var(--muted);font-size:.9rem}
-@media(max-width:760px){.two{grid-template-columns:1fr}}
-.cl{display:flex;flex-direction:column;gap:6px}.map2{border:1px solid var(--line);color:var(--ink);text-decoration:none;font-size:.85rem;padding:7px 12px;border-radius:10px;text-align:center;white-space:nowrap}@media(max-width:640px){.cl{grid-column:1/-1;flex-direction:row}.cl a{flex:1}}
-
-[hidden]{display:none!important}
-.app{max-width:640px;margin:0 auto;padding-bottom:92px;min-height:100vh;background:var(--bg)}
+.app{max-width:640px;margin:0 auto;padding-bottom:96px;min-height:100vh}
 .app .wrap{max-width:640px}
 .app section{padding:20px 0}
-.two{grid-template-columns:1fr!important}
-.hd{background:linear-gradient(135deg,#17235f 0%,#0e5fa8 55%,#0aa39a 100%);padding:14px 16px 20px;border-radius:0 0 24px 24px}
-.hrow{display:flex;gap:12px;align-items:center}
-.logo{width:48px;height:48px;border-radius:50%;background:#fff;padding:3px;flex:none}
-.sbox{flex:1;display:flex;align-items:center;gap:8px;background:#fff;border-radius:14px;padding:0 14px;min-width:0}
-.sbox input{border:0;outline:0;background:transparent;font:inherit;color:#0f1f3d;padding:12px 0;width:100%;min-width:0}
-.hello{color:#fff;margin:14px 2px 0;font-weight:700;font-size:1.05rem}.hello small{display:block;font-weight:400;color:#cfe3f7;font-size:.85rem}
-.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 8px;padding:18px 16px 6px}
-.tile{display:flex;flex-direction:column;align-items:center;gap:6px;background:transparent;border:0;font:inherit;font-size:.82rem;color:var(--ink);cursor:pointer;text-align:center;line-height:1.25}
-.ti{width:58px;height:58px;border-radius:18px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:1.75rem;box-shadow:0 6px 14px -10px rgba(14,95,168,.7)}
+h1,h2,h3,.sec-t,.hello{font-family:"Playfair Display","Be Vietnam Pro",Georgia,serif;letter-spacing:.01em;line-height:1.15}
+h1{font-size:clamp(2rem,5.4vw,3.4rem);margin:0 0 14px;font-weight:700;max-width:16ch}
+h2{font-size:clamp(1.4rem,3.2vw,1.9rem);margin:0 0 6px;color:#f6e7bd;font-weight:700}
+h3{font-size:1.05rem;margin:0 0 8px;font-weight:600;color:#f6e7bd}
+p{margin:0 0 12px}
+.lead{color:var(--muted);margin:0 0 18px;max-width:62ch;font-size:.96rem}
+.sec-t{font-size:1.15rem;font-weight:700;margin:22px 16px 8px;color:#f6e7bd}
+
+/* ---------- Header ---------- */
+.hd{max-width:640px;margin:0 auto;padding:0;background:none;border-radius:0}
+.kv{position:relative;overflow:hidden;border-radius:0 0 26px 26px}
+.kv img{width:100%;max-height:420px;object-fit:cover;object-position:center top;display:block}
+.kv::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,24,43,.15) 0%,rgba(4,24,43,.55) 55%,rgba(4,24,43,.97) 100%)}
+.hrow{position:relative;z-index:2;padding:0 16px;margin-top:-34px;display:flex;gap:12px;align-items:center}
+.logo{width:52px;height:52px;border-radius:50%;background:#fff;padding:3px;flex:none;box-shadow:0 8px 24px -12px rgba(0,0,0,.9);border:2px solid rgba(233,196,106,.6)}
+.sbox{
+  flex:1;display:flex;align-items:center;gap:10px;min-width:0;
+  background:rgba(8,32,56,.86);
+  border:1px solid var(--line-strong);
+  border-radius:var(--radius);
+  padding:0 16px;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  box-shadow:var(--shadow-sm);
+}
+.sbox input{border:0;outline:0;background:transparent;font:inherit;color:var(--ink);padding:13px 0;width:100%;min-width:0}
+.sbox input::placeholder{color:var(--muted)}
+.hello{margin:16px 18px 0;color:#f6e7bd;font-size:1.2rem;font-weight:700}
+.hello small{display:block;font-family:"Be Vietnam Pro",sans-serif;font-weight:400;color:var(--muted);font-size:.85rem;margin-top:2px;line-height:1.5}
+body.is-inner .kv img{max-height:160px}
+body.is-inner .hello{display:none}
+body.is-inner .hrow{margin-top:-24px}
+
+/* ---------- Tiles ---------- */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:16px 8px;padding:18px 16px 6px}
+.tile{display:flex;flex-direction:column;align-items:center;gap:8px;background:transparent;border:0;font:inherit;font-size:.8rem;font-weight:500;color:var(--ink);cursor:pointer;text-align:center;line-height:1.25;transition:transform .18s ease}
+.ti{width:60px;height:60px;border-radius:20px;background:linear-gradient(160deg,var(--surface-2),var(--surface));border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:1.8rem;box-shadow:var(--shadow-sm);transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+.tile:hover .ti,.tile:focus-visible .ti{border-color:var(--line-strong);box-shadow:var(--shadow);transform:translateY(-2px)}
 .tile:active .ti{transform:scale(.95)}
-.qc{display:flex;gap:12px;overflow-x:auto;padding:12px 16px;scroll-snap-type:x mandatory}
-.qcard{min-width:210px;flex:none;scroll-snap-align:start;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
-.qcard small{display:block;color:var(--muted);font-size:.78rem}.qcard b{font-size:.98rem}
-.banner{display:block;margin:6px 16px 4px;border-radius:20px;overflow:hidden;border:1px solid var(--line);background:var(--surface);text-decoration:none;color:var(--ink)}
-.banner img{display:block;width:100%;height:230px;object-fit:cover;object-position:center 35%}
-.banner div{padding:12px 16px}.banner b{display:block}.banner span{color:var(--muted);font-size:.85rem}
-.sec-t{font-size:1.25rem;font-weight:800;margin:20px 16px 0}
-.bnav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--line);display:flex;justify-content:center;padding:6px 0 calc(6px + env(safe-area-inset-bottom,0px))}
+
+/* ---------- Quick cards ---------- */
+.qc{display:flex;gap:12px;overflow-x:auto;padding:14px 16px 8px;scroll-snap-type:x mandatory;scrollbar-width:thin}
+.qcard{min-width:214px;flex:none;scroll-snap-align:start;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow-sm)}
+.qcard small{display:block;color:var(--muted);font-size:.76rem;margin-bottom:2px;text-transform:uppercase;letter-spacing:.06em}
+.qcard b{font-size:.98rem;font-weight:700;color:var(--ink)}
+
+/* ---------- Gallery ---------- */
+.gal{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:12px 16px 6px;scrollbar-width:thin}
+.gi{flex:none;width:min(78vw,320px);scroll-snap-align:center;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .2s ease,border-color .2s ease}
+.gi:hover{transform:translateY(-2px);border-color:var(--line-strong)}
+.gi img{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
+.gcap{margin:10px 18px 0;color:var(--muted);font-size:.84rem;line-height:1.6}
+.tg{margin:12px 16px -2px;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+/* ---------- Tabs / chips ---------- */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tab{border:1px solid var(--line);background:transparent;color:var(--ink);padding:9px 16px;border-radius:999px;font:inherit;font-size:.9rem;cursor:pointer;transition:all .16s ease}
+.tab:hover{border-color:var(--line-strong)}
+.tab[aria-pressed="true"]{background:var(--brand);color:var(--brand-ink);border-color:var(--brand);font-weight:700}
+.chip{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:8px 14px;font:inherit;font-size:.86rem;cursor:pointer;margin:0 6px 8px 0;transition:all .16s ease}
+.chip:hover{border-color:var(--line-strong)}
+.chip[aria-pressed="true"]{background:var(--brand);color:var(--brand-ink);border-color:var(--brand);font-weight:600}
+
+/* ---------- Tools panel ---------- */
+.tools{background:rgba(11,37,66,.92);border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px;box-shadow:var(--shadow);backdrop-filter:blur(12px)}
+#v-quanh .tools{position:static;top:0;z-index:8}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.row label{font-size:.86rem;font-weight:500}
+input[type=range]{accent-color:var(--brand);width:200px;vertical-align:middle}
+.count{color:var(--muted);font-size:.86rem;margin-left:auto}
+.rd{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}
+.sorts{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.sbox.mini{margin:8px 0 0;max-width:100%;flex:1;min-width:220px}
+
+/* ---------- Cards / list ---------- */
+.list{display:grid;gap:12px}
+.card{display:grid;grid-template-columns:92px 1fr auto;gap:14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow-sm);transition:border-color .16s ease,transform .16s ease}
+.card:hover{border-color:var(--line-strong);transform:translateY(-1px)}
+.dist{text-align:center;background:var(--soft);border-radius:12px;padding:8px 4px;font-weight:800;line-height:1.2;font-size:.95rem}
+.dist small{display:block;font-weight:500;color:var(--muted);font-size:.7rem;margin-top:2px}
+.card h3{margin:0;font-size:1rem}
+.card .a{color:var(--muted);font-size:.88rem}
+.card .meta{font-size:.86rem;margin-top:4px;line-height:1.55}
+.tag{display:inline-block;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:1px 9px;font-size:.75rem;margin-right:6px}
+.cl{display:flex;flex-direction:column;gap:6px}
+.map,.map2{border:1px solid var(--line-strong);color:var(--ink);text-decoration:none;font-size:.84rem;font-weight:600;padding:8px 12px;border-radius:10px;text-align:center;white-space:nowrap;background:transparent;font:inherit;cursor:pointer;transition:all .16s ease}
+.map{background:linear-gradient(135deg,#f3d681,#d6a636);color:#14233a;border:0}
+.map:hover,.map2:hover{filter:brightness(1.08);text-decoration:none}
+.sep{margin:18px 0 4px;font-weight:700;color:var(--muted);font-size:.88rem}
+
+/* ---------- Panels / forms ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:22px;box-shadow:var(--shadow)}
+.panel h3{margin:0 0 4px;font-size:1.1rem}
+.sub{color:var(--muted);font-size:.88rem;margin:0 0 14px}
+.two{display:grid;grid-template-columns:1fr;gap:18px;align-items:start}
+label.l{font-size:.86rem;font-weight:500;display:flex;justify-content:space-between;margin-top:6px}
+input[type=number],input[type=text],input[type=date],input[type=search],select.sel{
+  width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:var(--radius-sm);
+  background:var(--bg-soft);color:var(--ink);font:inherit;margin:6px 0 14px;min-width:0;
+  transition:border-color .16s ease,box-shadow .16s ease;
+}
+input:focus,select.sel:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(95,211,224,.2)}
+input::placeholder{color:var(--muted)}
+.btn{background:linear-gradient(135deg,#f3d681,#d6a636);color:var(--accent-ink);border:0;border-radius:12px;padding:12px 18px;font:inherit;font-weight:700;cursor:pointer;transition:all .18s ease;box-shadow:var(--shadow-sm)}
+.btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn.full{width:100%}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line-strong);box-shadow:none}
+.btn.ghost:hover{background:var(--soft);filter:none}
+
+/* ---------- Chi tiêu ---------- */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:16px}
+.kpi{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.kpi small{display:block;color:var(--muted);font-size:.76rem;margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em}
+.kpi b{font-size:1.05rem;font-weight:700}
+.verdict{border-radius:14px;padding:14px 16px;font-weight:600;margin-bottom:14px;font-size:.92rem;line-height:1.55}
+.v-good{background:rgba(24,163,123,.16);color:#8ff0cf;border:1px solid rgba(24,163,123,.4)}
+.v-mid{background:rgba(233,196,106,.14);color:#f5dfa5;border:1px solid rgba(233,196,106,.4)}
+.v-bad{background:rgba(232,69,44,.16);color:#ffb3a3;border:1px solid rgba(232,69,44,.4)}
+.brow{margin:10px 0;font-size:.86rem}
+.brow .t{display:flex;justify-content:space-between;gap:8px;margin-bottom:4px}
+.track{height:10px;background:var(--soft);border-radius:99px;position:relative;margin-top:3px;overflow:visible}
+.track i{display:block;height:100%;border-radius:99px;transition:width .4s ease}
+.track u{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink);opacity:.55}
+.tips{margin:8px 0 0;padding-left:18px;color:var(--ink);font-size:.9rem}
+.tips li{margin:6px 0}
+.exp{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--line);font-size:.88rem}
+.exp:last-child{border-bottom:0}
+.exp button{border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:1.15rem;line-height:1;padding:2px 8px;border-radius:8px;transition:all .16s ease}
+.exp button:hover{color:var(--danger);background:rgba(232,69,44,.12)}
+details.setup>summary{font-weight:600;color:var(--ink);margin-bottom:10px;cursor:pointer;font-size:.92rem}
+.x-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.x-actions .btn{flex:1;min-width:140px}
+
+/* ---------- Dishes ---------- */
+.dish{display:flex;justify-content:space-between;gap:12px;align-items:center;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:10px;transition:border-color .16s ease}
+.dish:hover{border-color:var(--line-strong)}
+.dish small{display:block;color:var(--muted);font-size:.8rem}
+.price{font-weight:800;white-space:nowrap;color:var(--accent)}
+.near-list{margin-top:14px}
+.near-list .sub{margin:8px 0 0}
+
+/* ---------- Route ---------- */
+.bus{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.route{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow-sm)}
+.route .no{display:inline-block;background:linear-gradient(135deg,#f3d681,#d6a636);color:#14233a;font-weight:800;border-radius:8px;padding:1px 10px;margin-right:8px;font-size:.92rem}
+.route small{display:block;color:var(--muted);margin-top:4px;font-size:.82rem}
+.note{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:12px 16px;color:var(--muted);font-size:.86rem;margin-top:16px;line-height:1.6}
+
+/* ---------- Chat ---------- */
+.chat{display:flex;flex-direction:column;gap:10px;max-height:min(56vh,440px);overflow:auto;margin-bottom:14px;padding-right:4px;scrollbar-width:thin}
+.msg{white-space:pre-wrap;padding:11px 15px;border-radius:16px;max-width:90%;font-size:.92rem;line-height:1.6}
+.msg.ai{background:var(--soft);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:6px}
+.msg.me{background:linear-gradient(135deg,#f3d681,#d6a636);color:var(--accent-ink);align-self:flex-end;border-bottom-right-radius:6px;font-weight:500}
+.ask{display:flex;gap:8px}
+.ask input{margin:0;flex:1}
+#c-quick{margin-bottom:8px}
+
+/* ---------- Bottom nav ---------- */
+.bnav{
+  position:fixed;left:0;right:0;bottom:0;z-index:30;
+  background:rgba(4,22,40,.94);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-top:1px solid var(--line-strong);
+  display:flex;justify-content:center;
+  padding:8px 0 calc(8px + env(safe-area-inset-bottom,0px));
+  box-shadow:0 -10px 30px -20px #000;
+}
 .bnav div{display:flex;width:100%;max-width:640px}
-.bnav button{flex:1;background:transparent;border:0;font:inherit;font-size:.72rem;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;cursor:pointer}
-.bnav button span{font-size:1.35rem}
-.bnav button[aria-current="page"]{color:var(--brand);font-weight:700}
-summary{cursor:pointer;color:var(--muted);font-size:.9rem}
-.map2{background:transparent;font:inherit}
+.bnav button{flex:1;background:transparent;border:0;font:inherit;font-size:.7rem;font-weight:500;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;cursor:pointer;transition:color .16s ease}
+.bnav button span{font-size:1.35rem;line-height:1}
+.bnav button[aria-current="page"]{color:var(--accent);font-weight:700}
+.bnav button:hover{color:var(--ink)}
+
+/* ---------- Footer ---------- */
+footer{border-top:1px solid var(--line);padding:26px 0 40px;color:var(--muted);font-size:.84rem}
+
+/* ---------- Utility ---------- */
+[hidden]{display:none!important}
+.qlink{display:block;margin:10px 16px 0;color:var(--accent);font-size:.88rem;font-weight:600}
+#f-res{display:block;margin-top:12px;line-height:1.55;font-weight:700;color:#f6e7bd}
+#gmap{box-shadow:var(--shadow-sm)}
+#mapsvg{border:1px solid var(--line)}
+
+/* ---------- Responsive ---------- */
+@media(max-width:760px){
+  .two{grid-template-columns:1fr}
+  .tiles{grid-template-columns:repeat(4,1fr);gap:14px 6px}
+  .ti{width:54px;height:54px;font-size:1.55rem;border-radius:18px}
+  .tile{font-size:.74rem}
+}
+@media(max-width:640px){
+  .card{grid-template-columns:78px 1fr}
+  .cl{grid-column:1/-1;flex-direction:row}
+  .cl a,.cl button{flex:1}
+  .count{margin-left:0}
+  .hrow{margin-top:-28px}
+  .logo{width:46px;height:46px}
+  .hello{font-size:1.1rem}
+  input[type=range]{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
 </style></head><body>
-<header class="hd"><div class="hrow"><img class="logo" src="__LOGO__" alt="Logo Dynamic NEU club"><label class="sbox"><span aria-hidden="true">🔍</span><input id="qs" type="search" placeholder="Tìm quán ăn, cà phê, cây xăng..." aria-label="Tìm địa điểm quanh NEU"></label></div>
-<div class="hello">Chào sinh viên NEU!<small>Quản lý chi tiêu và khám phá quanh trường cùng Dynamic NEU</small></div></header>
-<main class="app">
-<div class="view" id="v-home">
-<div class="tiles">
-<button class="tile" data-go="chitieu"><span class="ti">💰</span>Chi tiêu</button>
-<button class="tile" data-go="home" data-scroll="angi"><span class="ti">🍜</span>Ăn gì hôm nay</button>
-<button class="tile" data-go="quanh" data-kind="food"><span class="ti">🥢</span>Quán ăn</button>
-<button class="tile" data-go="quanh" data-kind="cafe"><span class="ti">☕</span>Học bài</button>
-<button class="tile" data-go="quanh" data-kind="fun"><span class="ti">🎬</span>Giải trí</button>
-<button class="tile" data-go="quanh" data-kind="xang"><span class="ti">⛽</span>Cây xăng</button>
-<button class="tile" data-go="xebuyt"><span class="ti">🚌</span>Xe buýt</button>
-<button class="tile" data-go="hoi"><span class="ti">🤖</span>Hỏi AI</button></div>
-<div class="qc"><div class="qcard"><small>Có thể chi mỗi ngày</small><b id="hc-bud">Chưa ghi chi tiêu</b></div>
-<div class="qcard"><small>Gần bạn nhất</small><b id="hc-near">Đang tính...</b></div>
-<div class="qcard"><small>Tuyến xe buýt qua NEU</small><b>18, 47B, 21A, 21B, 25, 32</b></div></div>
-<div class="sec-t">Đồng hành cùng Dynamic NEU</div>
-<a class="banner" href="https://www.facebook.com/dynamicneu.club" target="_blank" rel="noopener"><img src="__POSTER__" alt="Poster Lumora, Dynamic NEU 10th Recruitment"><div><b>Lumora · Dynamic NEU 10th Recruitment</b><span>Câu lạc bộ Khởi nghiệp Sáng tạo Dynamic, Đoàn TNCS Hồ Chí Minh Đại học Kinh tế Quốc dân. Bấm để xem trang của câu lạc bộ.</span></div></a>
-<div class="wrap"><section id="angi"><h2>Hôm nay ăn gì?</h2><p class="lead">Chọn ngân sách một bữa và nhu cầu, trợ lý gợi ý nhanh vài món. Giá là mức tham khảo.</p>
-<div class="panel" style="max-width:560px">
-<label class="l" for="m-b">Ngân sách một bữa <b id="m-bv">35.000đ</b></label>
-<input type="range" id="m-b" min="15000" max="80000" step="5000" value="35000" style="width:100%;margin:8px 0 14px">
-<div id="m-chips" role="group" aria-label="Nhu cầu"><button class="chip" aria-pressed="false" data-t="nhanh">Nhanh gọn</button><button class="chip" aria-pressed="false" data-t="lanh">Lành mạnh</button><button class="chip" aria-pressed="false" data-t="nuoc">Có nước</button><button class="chip" aria-pressed="false" data-t="cay">Cay cay</button></div>
-<button class="btn full" id="m-go">Gợi ý cho tôi</button><div id="m-res" aria-live="polite"></div></div></section>
-
-</div></div>
-<div class="view wrap" id="v-chitieu" hidden><section id="chitieu"><h2>Sổ chi tiêu và đánh giá tiết kiệm</h2>
-<p class="lead">Ghi khoản chi trong tháng, trang tự phân tích tỷ lệ từng nhóm, dự báo cuối tháng và cho biết bạn đang tiết kiệm hay chi quá tay. Dữ liệu chỉ lưu trên trình duyệt của bạn.</p>
-<div class="two">
-<div class="panel"><h3>Thiết lập tháng này</h3>
-<label class="l" for="x-inc">Tiền sinh hoạt một tháng (đồng)</label><input type="text" id="x-inc" value="3.000.000" inputmode="numeric" autocomplete="off">
-<label class="l" for="x-goal">Mục tiêu tiết kiệm <b id="x-gv">20%</b></label><input type="range" id="x-goal" min="0" max="50" step="5" value="20" style="width:100%;margin:8px 0 14px">
-<h3 style="margin-top:8px">Thêm khoản chi</h3>
-<label class="l" for="x-amt">Số tiền (đồng)</label><input type="text" id="x-amt" inputmode="numeric" autocomplete="off" placeholder="Ví dụ 35.000">
-<label class="l" for="x-cat">Nhóm</label><select id="x-cat" class="sel"></select>
-<label class="l" for="x-note">Ghi chú (không bắt buộc)</label><input type="text" id="x-note" placeholder="Ví dụ cơm trưa">
-<button class="btn full" id="x-add">Thêm khoản chi</button>
-<div style="display:flex;gap:8px;margin-top:10px"><button class="btn ghost" id="x-demo">Nạp dữ liệu mẫu</button><button class="btn ghost" id="x-clear">Xóa tất cả</button></div>
-<p class="sub" id="x-msg" aria-live="polite" style="margin-top:10px"></p>
-<h3 style="margin-top:10px">Khoản chi gần đây</h3><div id="x-list"></div></div>
-<div class="panel"><h3>Phân tích</h3><div id="x-verdict"></div><div class="kpis" id="x-kpi"></div>
-<div class="donut" id="x-donut" role="img" aria-label="Biểu đồ tỷ lệ chi tiêu theo nhóm"></div>
-<div id="x-bars"></div><p class="sub" style="margin:10px 0 0">Vạch đen là mức gợi ý tham khảo cho sinh viên, không phải quy định.</p>
-<h3 style="margin-top:14px">Nhận xét</h3><ul class="tips" id="x-tips"></ul>
-<button class="btn full" id="x-aibtn" style="margin-top:12px">Phân tích bằng AI</button><div class="note" id="x-ai" aria-live="polite" style="display:none;white-space:pre-wrap"></div></div></div></section>
-<section id="vexe"><h2>Vé xe buýt: lượt hay tháng?</h2><p class="lead">Tính nhanh chi phí đi lại để biết mua vé nào có lợi hơn.</p><div class="panel" style="max-width:560px"><h3>Vé lượt hay vé tháng?</h3><p class="sub">Sửa giá theo thực tế rồi so sánh.</p>
-<label class="l" for="f-tp">Giá vé lượt (đồng)</label><input type="text" id="f-tp" value="7.000" inputmode="numeric" autocomplete="off">
-<label class="l" for="f-mp">Giá vé tháng (đồng)</label><input type="text" id="f-mp" value="100.000" inputmode="numeric" autocomplete="off">
-<label class="l" for="f-td">Số chuyến mỗi ngày <b id="f-tdv">2</b></label><input type="range" id="f-td" min="1" max="8" value="2" style="width:100%;margin:8px 0 12px">
-<label class="l" for="f-dm">Số ngày đi mỗi tháng <b id="f-dmv">22</b></label><input type="range" id="f-dm" min="1" max="30" value="22" style="width:100%;margin:8px 0 12px">
-<b id="f-res"></b></div>
-</section>
-</div>
-<div class="view wrap" id="v-quanh" hidden><div id="quanh"><h2>Quanh NEU</h2><p class="lead">Bản đồ Google Maps hiển thị địa điểm bạn chọn. Chọn loại hoặc bấm “Xem trên bản đồ” ở từng quán.</p>
-<iframe id="gmap" title="Google Maps quanh NEU" loading="lazy" allow="geolocation" referrerpolicy="no-referrer-when-downgrade" style="width:100%;height:320px;border:0;border-radius:18px;background:var(--soft)"></iframe>
-<div class="row" style="margin:10px 0 16px"><a class="map" id="gopen" target="_blank" rel="noopener">Mở Google Maps</a><span class="sub" style="margin:0">Nếu khung bản đồ trống, trình duyệt đang chặn nhúng, hãy bấm nút bên cạnh.</span></div><div class="tools">
-<div class="tabs" id="tabs" role="group" aria-label="Loại địa điểm">
-<button class="tab" aria-pressed="true" data-k="all">Tất cả</button>
-<button class="tab" aria-pressed="false" data-k="food">Đồ ăn</button>
-<button class="tab" aria-pressed="false" data-k="cafe">Cà phê học bài</button>
-<button class="tab" aria-pressed="false" data-k="fun">Giải trí</button>
-<button class="tab" aria-pressed="false" data-k="xang">Cây xăng</button></div>
-<div class="row"><label for="rng">Trong vòng <b id="rv">6.000 m</b></label>
-<input type="range" id="rng" min="300" max="6000" step="100" value="6000">
-<span class="count" id="cnt" aria-live="polite"></span></div>
-<div class="row" style="margin-top:12px"><button class="btn" id="loc">📍 Dùng vị trí hiện tại của tôi</button><span class="sub" id="locmsg" style="margin:0" aria-live="polite">Đang tính khoảng cách từ NEU.</span></div>
-<details style="margin-top:12px"><summary>Bản đồ nhanh (không cần mạng)</summary><svg id="mapsvg" viewBox="0 0 640 340" role="img" aria-label="Bản đồ nhanh các địa điểm quanh vị trí đang chọn" style="width:100%;height:auto;margin-top:12px;background:var(--soft);border-radius:14px"></svg>
-<div class="sub" id="maplegend" style="margin:6px 0 0"></div></details></div>
-<section style="padding-top:22px"><div class="list" id="list"></div>
-<p class="note">Khoảng cách là đường chim bay từ 207 Giải Phóng, đi thực tế sẽ dài hơn. Giá lấy từ đánh giá của khách trên Google Maps và bài viết ẩm thực, có thể đã đổi, nên hãy hỏi lại quán. Giá xăng thay đổi theo kỳ điều chỉnh, hãy xem bảng giá niêm yết tại trạm. Các quán không có tọa độ được xếp cuối danh sách. Nguồn: Google Maps, Mytour.</p></section>
-
-
-</div>
-</div>
-<div class="view wrap" id="v-xebuyt" hidden><section id="xebuyt"><h2>Xe buýt đến NEU</h2>
-<p class="lead">Các tuyến đi qua khu vực 207 Giải Phóng, lấy từ nguồn công khai. Hãy kiểm tra lại giờ chạy và giá vé trên ứng dụng xe buýt Hà Nội.</p>
-<div class="bus">
-<div class="route"><span class="no">18</span><strong>ĐH Kinh tế Quốc dân – Long Biên</strong><small>Tuyến vòng, quay lại NEU</small></div>
-<div class="route"><span class="no">47B</span><strong>ĐH Kinh tế Quốc dân – Kiêu Kỵ</strong><small>Đi về phía Gia Lâm</small></div>
-<div class="route"><span class="no">21A</span><strong>Bến xe Giáp Bát – Bến xe Yên Nghĩa</strong><small>Chạy dọc Giải Phóng</small></div>
-<div class="route"><span class="no">21B</span><strong>Duyên Thái – Bến xe Mỹ Đình</strong><small>Kết nối bến xe Mỹ Đình</small></div>
-<div class="route"><span class="no">25</span><strong>BV Nhiệt đới TW cơ sở 2 – Bến xe Giáp Bát</strong><small>Đi qua Giải Phóng</small></div>
-<div class="route"><span class="no">32</span><strong>Giáp Bát – Nhổn</strong><small>Tuyến dài qua trung tâm</small></div>
-<div class="route"><span class="no">23</span><strong>Nguyễn Công Trứ – Vân Hồ</strong><small>Tuyến vòng</small></div></div>
-<p class="note">Các tuyến khác cũng đi qua khu vực trường: 03, 03B, 08, 19, 24, 26, 28, 41.</p></section>
-
-</div>
-<div class="view wrap" id="v-hoi" hidden><section id="hoi"><h2>Hỏi nhanh trợ lý</h2><p class="lead">Trợ lý AI đọc số liệu sổ chi tiêu và danh sách quán quanh NEU của bạn để trả lời. Nếu AI không khả dụng, trợ lý trả lời theo từ khóa.</p>
-<div class="panel" style="max-width:640px"><div class="chat" id="c-chat" aria-live="polite"><div class="msg ai">Chào bạn! Bạn cần hỏi về ăn uống, chi tiêu, xe buýt hay quán quanh NEU?</div></div>
-<div id="c-quick"><button class="chip">Phân tích chi tiêu</button><button class="chip">Ăn gì rẻ mà no?</button><button class="chip">Xe buýt đến NEU</button><button class="chip">Quán học bài</button></div>
-<div class="ask"><input type="text" id="c-q" placeholder="Nhập câu hỏi" aria-label="Câu hỏi"><button class="btn" id="c-send">Gửi</button></div></div></section>
-<section id="dichvu"><h2>Dịch vụ khác cho sinh viên</h2><div class="grid">
-<div class="svc"><div>🏠</div><h3>Tìm phòng trọ</h3><p>So sánh giá, diện tích và khoảng cách đến trường.</p></div>
-<div class="svc"><div>🧺</div><h3>Giặt là, photo, in ấn</h3><p>Điểm dịch vụ gần nhất cùng bảng giá để tham khảo.</p></div>
-<div class="svc"><div>📅</div><h3>Lịch học và nhắc việc</h3><p>Nhắc giờ học, hạn nộp bài và lịch thi trước một ngày.</p></div>
-<div class="svc"><div>💬</div><h3>Hỏi đáp thủ tục</h3><p>Học bổng, ký túc xá, thẻ sinh viên: hỏi là có hướng dẫn.</p></div></div></section>
-</div>
-</main>
-<nav class="bnav" id="nav" aria-label="Điều hướng"><div>
-<button data-v="home" aria-current="page"><span>🏠</span>Trang chủ</button>
-<button data-v="chitieu"><span>💰</span>Chi tiêu</button>
-<button data-v="quanh"><span>📍</span>Quanh NEU</button>
-<button data-v="xebuyt"><span>🚌</span>Xe buýt</button>
-<button data-v="hoi"><span>💬</span>Hỏi AI</button></div></nav>
-<script>
-var items=[{"t": "fun", "n": "Bi-a Batuna", "a": "72 Trần Đại Nghĩa", "m": 208, "h": "Mở 24 giờ", "p": "Chưa có bảng giá, hỏi quán", "x": "Bi-a, 30 bàn", "l": "https://www.google.com/maps/search/?api=1&query=Bi-a%20Batuna%2072%20Tr%E1%BA%A7n%20%C4%90%E1%BA%A1i%20Ngh%C4%A9a%20H%C3%A0%20N%E1%BB%99i", "la": 21.0006673, "lo": 105.8448653}, {"t": "cafe", "n": "Cà phê vườn ngõ 128C Đại La", "a": "ngách 51 ngõ 128C Đại La", "m": 213, "h": "7:00–23:00", "p": "Giá rẻ (mức 1/4 trên Google)", "x": "Nhiều cây xanh, hợp ngồi trò chuyện", "l": "https://www.google.com/maps/search/?api=1&query=C%C3%A0%20ph%C3%AA%20v%C6%B0%E1%BB%9Dn%20ng%C3%B5%20128C%20%C4%90%E1%BA%A1i%20La%20ng%C3%A1ch%2051%20ng%C3%B5%20128C%20%C4%90%E1%BA%A1i%20La%20H%C3%A0%20N%E1%BB%99i", "la": 20.9986265, "lo": 105.8444355}, {"t": "food", "n": "Mì cay Seoul", "a": "76 Trần Đại Nghĩa", "m": 233, "h": "8:00–22:00", "p": "Giá rẻ (mức 1/4 trên Google)", "x": "Mì cay Hàn Quốc", "l": "https://www.google.com/maps/search/?api=1&query=M%C3%AC%20cay%20Seoul%2076%20Tr%E1%BA%A7n%20%C4%90%E1%BA%A1i%20Ngh%C4%A9a%20H%C3%A0%20N%E1%BB%99i", "la": 21.0003333, "lo": 105.8452111}, {"t": "food", "n": "Ơn Giời Tahu Ngon Đây Rồi", "a": "65 Lê Thanh Nghị", "m": 263, "h": "8:00–23:00", "p": "Giá rẻ (mức 1/4 trên Google)", "x": "Tào phớ, đồ ngọt", "l": "https://www.google.com/maps/search/?api=1&query=%C6%A0n%20Gi%E1%BB%9Di%20Tahu%20Ngon%20%C4%90%C3%A2y%20R%E1%BB%93i%2065%20L%C3%AA%20Thanh%20Ngh%E1%BB%8B%20H%C3%A0%20N%E1%BB%99i", "la": 21.0016239, "lo": 105.8448275}, {"t": "food", "n": "Umai29", "a": "129 Trần Đại Nghĩa", "m": 271, "h": "10:00–21:00", "p": "Cơm 60.000–69.000đ, lẩu 1 người 96.000đ (theo đánh giá)", "x": "Cơm, lẩu Nhật", "l": "https://www.google.com/maps/search/?api=1&query=Umai29%20129%20Tr%E1%BA%A7n%20%C4%90%E1%BA%A1i%20Ngh%C4%A9a%20H%C3%A0%20N%E1%BB%99i", "la": 21.0007952, "lo": 105.8454643}, {"t": "cafe", "n": "Babetta Coffee & Tea House", "a": "159 Trần Đại Nghĩa", "m": 284, "h": "7:00–1:00", "p": "Giá rẻ (mức 1/4 trên Google)", "x": "Cà phê và trà, mở khuya", "l": "https://www.google.com/maps/search/?api=1&query=Babetta%20Coffee%20%26%20Tea%20House%20159%20Tr%E1%BA%A7n%20%C4%90%E1%BA%A1i%20Ngh%C4%A9a%20H%C3%A0%20N%E1%BB%99i", "la": 21.001014, "lo": 105.8455084}, {"t": "food", "n": "Busan Yori", "a": "147 Trần Đại Nghĩa", "m": 291, "h": "Chưa rõ giờ mở", "p": "Bibimbap khoảng 39.000đ (theo đánh giá)", "x": "Món Hàn", "l": "https://www.google.com/maps/search/?api=1&query=Busan%20Yori%20147%20Tr%E1%BA%A7n%20%C4%90%E1%BA%A1i%20Ngh%C4%A9a%20H%C3%A0%20N%E1%BB%99i", "la": 21.0015455, "lo": 105.8452548}, {"t": "cafe", "n": "coffee later?", "a": "103 K11A Nguyễn Hiền, khu tập thể Bách Khoa", "m": 373, "h": "7:00–23:00", "p": "Giá sinh viên (theo đánh giá)", "x": "Quán nhỏ, yên tĩnh, hợp học bài", "l": "https://www.google.com/maps/search/?api=1&query=coffee%20later%3F%20103%20K11A%20Nguy%E1%BB%85n%20Hi%E1%BB%81n%2C%20khu%20t%E1%BA%ADp%20th%E1%BB%83%20B%C3%A1ch%20Khoa%20H%C3%A0%20N%E1%BB%99i", "la": 21.0005764, "lo": 105.8465365}, {"t": "food", "n": "Bếp nhà Mắm", "a": "5 ngõ 213 Trần Đại Nghĩa", "m": 385, "h": "Mở 24 giờ", "p": "60.000–100.000đ/người (theo đánh giá)", "x": "Mì Indo, bàn xiển", "l": "https://www.google.com/maps/search/?api=1&query=B%E1%BA%BFp%20nh%C3%A0%20M%E1%BA%AFm%205%20ng%C3%B5%20213%20Tr%E1%BA%A7n%20%C4%90%E1%BA%A1i%20Ngh%C4%A9a%20H%C3%A0%20N%E1%BB%99i", "la": 20.9982859, "lo": 105.8462209}, {"t": "food", "n": "Mukbang 239", "a": "239 Trần Đại Nghĩa", "m": 425, "h": "9:00–22:00", "p": "Giá trung bình (mức 2/4 trên Google)", "x": "Mì lẩu Hàn Quốc", "l": "https://www.google.com/maps/search/?api=1&query=Mukbang%20239%20239%20Tr%E1%BA%A7n%20%C4%90%E1%BA%A1i%20Ngh%C4%A9a%20H%C3%A0%20N%E1%BB%99i", "la": 20.9974644, "lo": 105.8460604}, {"t": "cafe", "n": "Canopy StudySpace", "a": "89 ngõ 183 Trần Đại Nghĩa", "m": 459, "h": "Mở 24 giờ", "p": "Giá rẻ (mức 1/4 trên Google)", "x": "Không gian học bài, mở xuyên đêm", "l": "https://www.google.com/maps/search/?api=1&query=Canopy%20StudySpace%2089%20ng%C3%B5%20183%20Tr%E1%BA%A7n%20%C4%90%E1%BA%A1i%20Ngh%C4%A9a%20H%C3%A0%20N%E1%BB%99i", "la": 21.0002129, "lo": 105.8474122}, {"t": "food", "n": "Tiệm Dũng Béo", "a": "108Y9 tập thể NEU, Trần Đại Nghĩa", "m": 462, "h": "Mở 24 giờ", "p": "Giá rẻ (mức 1/4 trên Google)", "x": "Ăn vặt sinh viên", "l": "https://www.google.com/maps/search/?api=1&query=Ti%E1%BB%87m%20D%C5%A9ng%20B%C3%A9o%20108Y9%20t%E1%BA%ADp%20th%E1%BB%83%20NEU%2C%20Tr%E1%BA%A7n%20%C4%90%E1%BA%A1i%20Ngh%C4%A9a%20H%C3%A0%20N%E1%BB%99i", "la": 20.9981119, "lo": 105.8469631}, {"t": "cafe", "n": "Bee Coffee", "a": "K8 cầu thang 1, khu tập thể Bách Khoa", "m": 491, "h": "7:30–22:30", "p": "Giá cạnh tranh (theo đánh giá)", "x": "Yên tĩnh, ngồi nhóm nhỏ", "l": "https://www.google.com/maps/search/?api=1&query=Bee%20Coffee%20K8%20c%E1%BA%A7u%20thang%201%2C%20khu%20t%E1%BA%ADp%20th%E1%BB%83%20B%C3%A1ch%20Khoa%20H%C3%A0%20N%E1%BB%99i", "la": 21.0006577, "lo": 105.847673}, {"t": "cafe", "n": "Đông Tây Cafe Sách", "a": "103 K2 ngõ 48 Tạ Quang Bửu", "m": 607, "h": "7:00–22:30", "p": "Giá rẻ (mức 1/4 trên Google)", "x": "Có sách, không gian rộng", "l": "https://www.google.com/maps/search/?api=1&query=%C4%90%C3%B4ng%20T%C3%A2y%20Cafe%20S%C3%A1ch%20103%20K2%20ng%C3%B5%2048%20T%E1%BA%A1%20Quang%20B%E1%BB%ADu%20H%C3%A0%20N%E1%BB%99i", "la": 21.0008669, "lo": 105.8487706}, {"t": "cafe", "n": "DoFé Cafe", "a": "42 ngõ 178 Giải Phóng", "m": 624, "h": "7:30–22:30", "p": "Giá rẻ (mức 1/4 trên Google)", "x": "Có sân thượng ngắm hoàng hôn", "l": "https://www.google.com/maps/search/?api=1&query=DoF%C3%A9%20Cafe%2042%20ng%C3%B5%20178%20Gi%E1%BA%A3i%20Ph%C3%B3ng%20H%C3%A0%20N%E1%BB%99i", "la": 20.9951772, "lo": 105.8399115}, {"t": "xang", "n": "Cây xăng Bách Khoa", "a": "29 Tạ Quang Bửu", "m": 694, "h": "Chưa rõ giờ mở", "p": "Giá xăng theo niêm yết tại trạm", "x": "Đổ xăng, trạm nhỏ, hay đông xe", "l": "https://www.google.com/maps/search/?api=1&query=C%C3%A2y%20x%C4%83ng%20B%C3%A1ch%20Khoa%2029%20T%E1%BA%A1%20Quang%20B%E1%BB%ADu%20H%C3%A0%20N%E1%BB%99i", "la": 21.0019774, "lo": 105.849331}, {"t": "food", "n": "Quán ăn sinh viên", "a": "3B Tạ Quang Bửu", "m": 846, "h": "Chưa rõ giờ mở", "p": "Giá sinh viên (theo đánh giá)", "x": "Cơm, bún, phở", "l": "https://www.google.com/maps/search/?api=1&query=Qu%C3%A1n%20%C4%83n%20sinh%20vi%C3%AAn%203B%20T%E1%BA%A1%20Quang%20B%E1%BB%ADu%20H%C3%A0%20N%E1%BB%99i", "la": 21.0064242, "lo": 105.8473592}, {"t": "cafe", "n": "Book In Bar", "a": "B5 phố Hoàng Tích Trí, khu tập thể Kim Liên", "m": 1197, "h": "7:30–22:30", "p": "Cà phê sữa đá 35.000–38.000đ (theo đánh giá)", "x": "Rất yên tĩnh, hợp ôn thi", "l": "https://www.google.com/maps/search/?api=1&query=Book%20In%20Bar%20B5%20ph%E1%BB%91%20Ho%C3%A0ng%20T%C3%ADch%20Tr%C3%AD%2C%20khu%20t%E1%BA%ADp%20th%E1%BB%83%20Kim%20Li%C3%AAn%20H%C3%A0%20N%E1%BB%99i", "la": 21.0088839, "lo": 105.8364891}, {"t": "fun", "n": "Canada Billiards Club", "a": "8 ngõ 198 Xã Đàn", "m": 1405, "h": "Mở 24 giờ", "p": "Giá theo giờ, hỏi quán", "x": "Bi-a, có đồ ăn", "l": "https://www.google.com/maps/search/?api=1&query=Canada%20Billiards%20Club%208%20ng%C3%B5%20198%20X%C3%A3%20%C4%90%C3%A0n%20H%C3%A0%20N%E1%BB%99i", "la": 21.0114281, "lo": 105.8372327}, {"t": "fun", "n": "CGV Vincom Bà Triệu", "a": "191 Bà Triệu", "m": 1406, "h": "8:00–24:00", "p": "Giá vé xem trên ứng dụng của rạp", "x": "Rạp chiếu phim", "l": "https://www.google.com/maps/search/?api=1&query=CGV%20Vincom%20B%C3%A0%20Tri%E1%BB%87u%20191%20B%C3%A0%20Tri%E1%BB%87u%20H%C3%A0%20N%E1%BB%99i", "la": 21.0110831, "lo": 105.8495107}, {"t": "fun", "n": "Sân bóng Airforce", "a": "Lê Trọng Tấn, Phương Liệt", "m": 1445, "h": "5:15–24:00", "p": "Chưa có bảng giá, hỏi sân", "x": "Sân 7, 9 và 11 người", "l": "https://www.google.com/maps/search/?api=1&query=S%C3%A2n%20b%C3%B3ng%20Airforce%20L%C3%AA%20Tr%E1%BB%8Dng%20T%E1%BA%A5n%2C%20Ph%C6%B0%C6%A1ng%20Li%E1%BB%87t%20H%C3%A0%20N%E1%BB%99i", "la": 20.9980926, "lo": 105.8292236}, {"t": "fun", "n": "Rạp Beta Giải Phóng", "a": "Tầng 3 IP2 Imperial, 360 Giải Phóng", "m": 1609, "h": "Mở 24 giờ (theo Google)", "p": "Giá vé xem trên ứng dụng của rạp", "x": "Rạp chiếu phim, cách NEU tiện đường Giải Phóng", "l": "https://www.google.com/maps/search/?api=1&query=R%E1%BA%A1p%20Beta%20Gi%E1%BA%A3i%20Ph%C3%B3ng%20T%E1%BA%A7ng%203%20IP2%20Imperial%2C%20360%20Gi%E1%BA%A3i%20Ph%C3%B3ng%20H%C3%A0%20N%E1%BB%99i", "la": 20.9857005, "lo": 105.8405838}, {"t": "xang", "n": "Petrolimex cửa hàng số 53", "a": "Km6 Giải Phóng, Tương Mai", "m": 1681, "h": "5:00–24:00", "p": "Giá xăng theo niêm yết tại trạm", "x": "Đổ xăng dọc đường Giải Phóng", "l": "https://www.google.com/maps/search/?api=1&query=Petrolimex%20c%E1%BB%ADa%20h%C3%A0ng%20s%E1%BB%91%2053%20Km6%20Gi%E1%BA%A3i%20Ph%C3%B3ng%2C%20T%C6%B0%C6%A1ng%20Mai%20H%C3%A0%20N%E1%BB%99i", "la": 20.9849612, "lo": 105.8413098}, {"t": "fun", "n": "The Root Boardgame Cafe", "a": "72 Trần Xuân Soạn", "m": 2122, "h": "9:00–23:00", "p": "Đồ uống giá hợp lý, tiền chơi tính riêng (theo đánh giá)", "x": "Quán board game, có nhân viên hướng dẫn", "l": "https://www.google.com/maps/search/?api=1&query=The%20Root%20Boardgame%20Cafe%2072%20Tr%E1%BA%A7n%20Xu%C3%A2n%20So%E1%BA%A1n%20H%C3%A0%20N%E1%BB%99i", "la": 21.0169235, "lo": 105.8524399}, {"t": "xang", "n": "Petrolimex Nguyễn Lương Bằng", "a": "185 Nguyễn Lương Bằng, Đống Đa", "m": 2239, "h": "Mở 24 giờ", "p": "Giá xăng theo niêm yết tại trạm", "x": "Trạm lớn, có quầy thanh toán hiện đại", "l": "https://www.google.com/maps/search/?api=1&query=Petrolimex%20Nguy%E1%BB%85n%20L%C6%B0%C6%A1ng%20B%E1%BA%B1ng%20185%20Nguy%E1%BB%85n%20L%C6%B0%C6%A1ng%20B%E1%BA%B1ng%2C%20%C4%90%E1%BB%91ng%20%C4%90a%20H%C3%A0%20N%E1%BB%99i", "la": 21.0138346, "lo": 105.8273332}, {"t": "xang", "n": "Petrolimex cửa hàng số 04", "a": "9 Trần Hưng Đạo, Hai Bà Trưng", "m": 2648, "h": "Mở 24 giờ", "p": "Giá xăng theo niêm yết tại trạm", "x": "Đổ xăng, mở xuyên đêm", "l": "https://www.google.com/maps/search/?api=1&query=Petrolimex%20c%E1%BB%ADa%20h%C3%A0ng%20s%E1%BB%91%2004%209%20Tr%E1%BA%A7n%20H%C6%B0ng%20%C4%90%E1%BA%A1o%2C%20Hai%20B%C3%A0%20Tr%C6%B0ng%20H%C3%A0%20N%E1%BB%99i", "la": 21.0190942, "lo": 105.8582396}, {"t": "xang", "n": "Petrolimex cửa hàng số 31", "a": "111 Láng, Đống Đa", "m": 2738, "h": "Mở 24 giờ", "p": "Giá xăng theo niêm yết tại trạm", "x": "Đổ xăng, hay đông giờ cao điểm", "l": "https://www.google.com/maps/search/?api=1&query=Petrolimex%20c%E1%BB%ADa%20h%C3%A0ng%20s%E1%BB%91%2031%20111%20L%C3%A1ng%2C%20%C4%90%E1%BB%91ng%20%C4%90a%20H%C3%A0%20N%E1%BB%99i", "la": 21.0048264, "lo": 105.8171315}, {"t": "fun", "n": "CGV Vincom Royal City", "a": "Tầng B2, 72A Nguyễn Trãi, Royal City", "m": 2881, "h": "9:00–23:00", "p": "Giá vé xem trên ứng dụng của rạp", "x": "Rạp chiếu phim, cùng trung tâm với bowling", "l": "https://www.google.com/maps/search/?api=1&query=CGV%20Vincom%20Royal%20City%20T%E1%BA%A7ng%20B2%2C%2072A%20Nguy%E1%BB%85n%20Tr%C3%A3i%2C%20Royal%20City%20H%C3%A0%20N%E1%BB%99i", "la": 21.0030833, "lo": 105.8154419}, {"t": "fun", "n": "Heroworld Bowling & Games", "a": "Tầng B2, Royal City, 72 Nguyễn Trãi", "m": 2947, "h": "10:00–22:00", "p": "Bowling 70.000đ/lượt, thuê giày 20.000đ (theo đánh giá)", "x": "Bowling, game", "l": "https://www.google.com/maps/search/?api=1&query=Heroworld%20Bowling%20%26%20Games%20T%E1%BA%A7ng%20B2%2C%20Royal%20City%2C%2072%20Nguy%E1%BB%85n%20Tr%C3%A3i%20H%C3%A0%20N%E1%BB%99i", "la": 21.0033781, "lo": 105.8148418}, {"t": "fun", "n": "Fantasy Billiards Club", "a": "35 Nhà Chung, Hoàn Kiếm", "m": 3069, "h": "Mở 24 giờ", "p": "Khoảng 80.000đ/giờ (theo đánh giá)", "x": "Bi-a", "l": "https://www.google.com/maps/search/?api=1&query=Fantasy%20Billiards%20Club%2035%20Nh%C3%A0%20Chung%2C%20Ho%C3%A0n%20Ki%E1%BA%BFm%20H%C3%A0%20N%E1%BB%99i", "la": 21.0266585, "lo": 105.8506205}, {"t": "fun", "n": "Minipolo Board Game Cafe", "a": "4-F5 ngõ 171 Thái Hà", "m": 3260, "h": "9:00–23:00", "p": "Chỉ trả tiền đồ uống, ly thứ hai giảm 30% (theo đánh giá)", "x": "Board game, có phòng riêng", "l": "https://www.google.com/maps/search/?api=1&query=Minipolo%20Board%20Game%20Cafe%204-F5%20ng%C3%B5%20171%20Th%C3%A1i%20H%C3%A0%20H%C3%A0%20N%E1%BB%99i", "la": 21.0152014, "lo": 105.8161425}, {"t": "xang", "n": "Petrolimex cửa hàng số 01", "a": "1 Trần Quang Khải, Hoàn Kiếm", "m": 3356, "h": "Mở 24 giờ", "p": "Giá xăng theo niêm yết tại trạm", "x": "Trạm lớn, tách khu ô tô và xe máy", "l": "https://www.google.com/maps/search/?api=1&query=Petrolimex%20c%E1%BB%ADa%20h%C3%A0ng%20s%E1%BB%91%2001%201%20Tr%E1%BA%A7n%20Quang%20Kh%E1%BA%A3i%2C%20Ho%C3%A0n%20Ki%E1%BA%BFm%20H%C3%A0%20N%E1%BB%99i", "la": 21.0260795, "lo": 105.8592592}, {"t": "fun", "n": "Trung tâm Chiếu phim Quốc gia", "a": "87 Láng Hạ", "m": 3401, "h": "8:00–24:00", "p": "Vé khoảng 50.000–70.000đ (theo đánh giá)", "x": "Rạp chiếu phim, giá mềm", "l": "https://www.google.com/maps/search/?api=1&query=Trung%20t%C3%A2m%20Chi%E1%BA%BFu%20phim%20Qu%E1%BB%91c%20gia%2087%20L%C3%A1ng%20H%E1%BA%A1%20H%C3%A0%20N%E1%BB%99i", "la": 21.016816, "lo": 105.8156311}, {"t": "fun", "n": "Timezone Hanoi Centre", "a": "Tầng B2, 175 Nguyễn Thái Học", "m": 3645, "h": "9:30–21:30", "p": "Chưa có bảng giá, hỏi quán", "x": "Khu game, bowling mini", "l": "https://www.google.com/maps/search/?api=1&query=Timezone%20Hanoi%20Centre%20T%E1%BA%A7ng%20B2%2C%20175%20Nguy%E1%BB%85n%20Th%C3%A1i%20H%E1%BB%8Dc%20H%C3%A0%20N%E1%BB%99i", "la": 21.0304767, "lo": 105.8300797}, {"t": "fun", "n": "KOEM Billiards Club", "a": "27 Lâm Du, Bồ Đề, Long Biên", "m": 5022, "h": "Mở 24 giờ", "p": "Giá theo giờ, hỏi quán", "x": "Bi-a", "l": "https://www.google.com/maps/search/?api=1&query=KOEM%20Billiards%20Club%2027%20L%C3%A2m%20Du%2C%20B%E1%BB%93%20%C4%90%E1%BB%81%2C%20Long%20Bi%C3%AAn%20H%C3%A0%20N%E1%BB%99i", "la": 21.0388035, "lo": 105.8677403}, {"t": "food", "n": "Bánh tráng trộn 74", "a": "1 ngách 98 ngõ Tự Do", "m": null, "h": "Chưa rõ", "p": "Chưa có bảng giá, hỏi quán", "x": "Bánh tráng trộn, bánh tráng nướng", "l": "https://www.google.com/maps/search/?api=1&query=B%C3%A1nh%20tr%C3%A1ng%20tr%E1%BB%99n%2074%201%20ng%C3%A1ch%2098%20ng%C3%B5%20T%E1%BB%B1%20Do%20H%C3%A0%20N%E1%BB%99i"}, {"t": "food", "n": "Nem nướng Nha Trang Hà Anh", "a": "108-D1, 98 ngõ Tự Do", "m": null, "h": "Chưa rõ", "p": "Khoảng 40.000đ/suất", "x": "Nem nướng", "l": "https://www.google.com/maps/search/?api=1&query=Nem%20n%C6%B0%E1%BB%9Bng%20Nha%20Trang%20H%C3%A0%20Anh%20108-D1%2C%2098%20ng%C3%B5%20T%E1%BB%B1%20Do%20H%C3%A0%20N%E1%BB%99i"}, {"t": "food", "n": "Mì trộn Indomie Bếp mẹ Bống", "a": "63 ngõ Tự Do", "m": null, "h": "8:30–21:00", "p": "Chưa có bảng giá, hỏi quán", "x": "Mì Indomie", "l": "https://www.google.com/maps/search/?api=1&query=M%C3%AC%20tr%E1%BB%99n%20Indomie%20B%E1%BA%BFp%20m%E1%BA%B9%20B%E1%BB%91ng%2063%20ng%C3%B5%20T%E1%BB%B1%20Do%20H%C3%A0%20N%E1%BB%99i"}, {"t": "food", "n": "Kombo cơm niêu Singapore", "a": "46 Trần Đại Nghĩa", "m": null, "h": "9:30–22:00", "p": "Chưa có bảng giá, hỏi quán", "x": "Cơm niêu", "l": "https://www.google.com/maps/search/?api=1&query=Kombo%20c%C6%A1m%20ni%C3%AAu%20Singapore%2046%20Tr%E1%BA%A7n%20%C4%90%E1%BA%A1i%20Ngh%C4%A9a%20H%C3%A0%20N%E1%BB%99i"}, {"t": "food", "n": "Chewy Junior", "a": "64 Trần Đại Nghĩa", "m": null, "h": "7:30–22:00", "p": "Giá cao hơn quán sinh viên", "x": "Bánh su kem", "l": "https://www.google.com/maps/search/?api=1&query=Chewy%20Junior%2064%20Tr%E1%BA%A7n%20%C4%90%E1%BA%A1i%20Ngh%C4%A9a%20H%C3%A0%20N%E1%BB%99i"}, {"t": "food", "n": "Vịt Việt Trinh", "a": "233 Trần Đại Nghĩa", "m": null, "h": "Chưa rõ", "p": "Chưa có bảng giá, hỏi quán", "x": "Lẩu vịt", "l": "https://www.google.com/maps/search/?api=1&query=V%E1%BB%8Bt%20Vi%E1%BB%87t%20Trinh%20233%20Tr%E1%BA%A7n%20%C4%90%E1%BA%A1i%20Ngh%C4%A9a%20H%C3%A0%20N%E1%BB%99i"}, {"t": "food", "n": "Ô BBQ cơm sườn phố cổ", "a": "241 Trần Đại Nghĩa", "m": null, "h": "Chưa rõ", "p": "Chưa có bảng giá, hỏi quán", "x": "Cơm sườn nướng", "l": "https://www.google.com/maps/search/?api=1&query=%C3%94%20BBQ%20c%C6%A1m%20s%C6%B0%E1%BB%9Dn%20ph%E1%BB%91%20c%E1%BB%95%20241%20Tr%E1%BA%A7n%20%C4%90%E1%BA%A1i%20Ngh%C4%A9a%20H%C3%A0%20N%E1%BB%99i"}, {"t": "food", "n": "VNA Vua Ốc", "a": "147 Trần Đại Nghĩa", "m": null, "h": "11:00–23:30", "p": "Chưa có bảng giá, hỏi quán", "x": "Ốc, hải sản", "l": "https://www.google.com/maps/search/?api=1&query=VNA%20Vua%20%E1%BB%90c%20147%20Tr%E1%BA%A7n%20%C4%90%E1%BA%A1i%20Ngh%C4%A9a%20H%C3%A0%20N%E1%BB%99i"}, {"t": "food", "n": "Chè Sài Gòn", "a": "P1-B2, ký túc xá NEU", "m": null, "h": "8:30–21:30", "p": "Chưa có bảng giá, hỏi quán", "x": "Chè, kem", "l": "https://www.google.com/maps/search/?api=1&query=Ch%C3%A8%20S%C3%A0i%20G%C3%B2n%20P1-B2%2C%20k%C3%BD%20t%C3%BAc%20x%C3%A1%20NEU%20H%C3%A0%20N%E1%BB%99i"}];
-var kind="all",max=6000,L=document.getElementById("list"),origin=null,watchId=null,sq="",pinned=false;
-var lab={food:"Đồ ăn",cafe:"Cà phê",fun:"Giải trí",xang:"Cây xăng"};
-var COL={food:"#e8452c",cafe:"#18a37b",fun:"#8b5cf6",xang:"#ffc21a"};
-var NEU=[20.9999958,105.8429949];
-function fmt(m){return m<1000?m+" m":(m/1000).toFixed(1).replace(".",",")+" km"}
-function hav(a,b,c,d){var R=6371000,r=Math.PI/180,x=Math.sin((c-a)*r/2),y=Math.sin((d-b)*r/2),q=x*x+Math.cos(a*r)*Math.cos(c*r)*y*y;return Math.round(2*R*Math.asin(Math.sqrt(q)))}
-function rank(){var o=origin||NEU;return items.map(function(i){return{i:i,m:i.la?hav(o[0],o[1],i.la,i.lo):null}}).sort(function(a,b){if(a.m===null)return b.m===null?0:1;if(b.m===null)return -1;return a.m-b.m})}
-function el(n,a,t){var e=document.createElementNS("http://www.w3.org/2000/svg",n);for(var k in a)e.setAttribute(k,a[k]);if(t)e.textContent=t;return e}
-function drawMap(vis){
- var s=document.getElementById("mapsvg");s.innerHTML="";var c=origin||NEU,cos=Math.cos(c[0]*Math.PI/180),cx=320,cy=170;
- function xy(la,lo){return[(lo-c[1])*111320*cos,-(la-c[0])*110540]}
- var R=500;vis.forEach(function(v){if(v.m!==null){var p=xy(v.i.la,v.i.lo);R=Math.max(R,Math.hypot(p[0],p[1]))}});
- var q=xy(NEU[0],NEU[1]);if(origin)R=Math.max(R,Math.hypot(q[0],q[1]));
- var sc=145/R,steps=[250,500,1000,2000,5000,10000,20000,50000],st=steps[steps.length-1];
- for(var z=0;z<steps.length;z++){if(R/steps[z]<=3.5){st=steps[z];break}}
- for(var k=1;k*st<=R*1.05;k++){var rr=k*st*sc;s.appendChild(el("circle",{cx:cx,cy:cy,r:rr,fill:"none",stroke:"#7a8499","stroke-opacity":".45","stroke-dasharray":"4 4"}));s.appendChild(el("text",{x:cx+4,y:cy-rr-3,"font-size":"10",style:"fill:var(--muted)"},fmt(k*st)))}
- vis.forEach(function(v){if(v.m===null)return;var p=xy(v.i.la,v.i.lo),d=el("circle",{cx:cx+p[0]*sc,cy:cy+p[1]*sc,r:6,fill:COL[v.i.t],stroke:"#fff","stroke-width":"1.5"});d.appendChild(el("title",{},v.i.n+" · "+fmt(v.m)));s.appendChild(d)});
- var nx=cx+q[0]*sc,ny=cy+q[1]*sc;
- s.appendChild(el("rect",{x:nx-6,y:ny-6,width:12,height:12,fill:"#0b2a6f",stroke:"#fff","stroke-width":"1.5"}));
- s.appendChild(el("text",{x:nx+9,y:ny+4,"font-size":"12","font-weight":"700",style:"fill:var(--ink)"},"NEU"));
- if(origin){s.appendChild(el("circle",{cx:cx,cy:cy,r:8,fill:"#2e8bff",stroke:"#fff","stroke-width":"2"}));s.appendChild(el("text",{x:cx+11,y:cy+4,"font-size":"12","font-weight":"700",style:"fill:var(--ink)"},"Bạn"))}
- var lg=document.getElementById("maplegend");lg.innerHTML="";
- Object.keys(lab).forEach(function(k){var sp=document.createElement("span");sp.style.marginRight="12px";var b=document.createElement("b");b.textContent="● ";b.style.color=COL[k];sp.appendChild(b);sp.appendChild(document.createTextNode(lab[k]));lg.appendChild(sp)});
-}
-var CT={food:"quán ăn",cafe:"quán cà phê",fun:"khu vui chơi giải trí",xang:"cây xăng"};
-function setMap(q,z){var f=document.getElementById("gmap");if(!f)return;f.src="https://www.google.com/maps?q="+encodeURIComponent(q)+"&z="+(z||15)+"&output=embed";document.getElementById("gopen").href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q)}
-function catMap(){pinned=false;var o=origin||NEU;if(kind==="all")setMap(origin?o[0]+","+o[1]:"207 Giải Phóng, Bạch Mai, Hà Nội",origin?16:15);else setMap(CT[kind]+" near "+o[0]+","+o[1],15)}
-function render(){
- L.innerHTML="";var n=0,shown=false,vis=[],from=origin?"từ bạn":"từ NEU";
- rank().forEach(function(o){var i=o.i,m=o.m;
-  if(kind!=="all"&&i.t!==kind)return;
-  if(sq&&(i.n+" "+i.a+" "+i.x).toLowerCase().indexOf(sq)<0)return;
-  if(m!==null&&m>max)return;
-  if(m===null&&max<6000)return;
-  if(m===null&&!shown){var s=document.createElement("div");s.className="sep";s.textContent="Chưa có khoảng cách (cùng khu Trần Đại Nghĩa, ngõ Tự Do)";L.appendChild(s);shown=true}
-  var c=document.createElement("div");c.className="card";
-  c.innerHTML='<div class="dist"></div><div><h3></h3><div class="a"></div><div class="meta"></div></div><div class="cl"><a class="map" target="_blank" rel="noopener">Chỉ đường</a><button class="map2" type="button">Xem trên bản đồ</button></div>';
-  var d=c.querySelector(".dist");
-  if(m===null){d.textContent="?";d.innerHTML+="<small>chưa rõ</small>"}else{d.textContent=fmt(m);d.innerHTML+="<small>"+from+"</small>"}
-  c.querySelector("h3").textContent=i.n;c.querySelector(".a").textContent=i.a;
-  var mt=c.querySelector(".meta"),t=document.createElement("span");t.className="tag";t.textContent=lab[i.t];mt.appendChild(t);
-  mt.appendChild(document.createTextNode(i.x+" · "+i.h+" · "+i.p));
-  c.querySelector(".map").href="https://www.google.com/maps/dir/?api=1&travelmode=driving&destination="+(i.la?i.la+","+i.lo:encodeURIComponent(i.n+" "+i.a+" Hà Nội"));
-  c.querySelector(".map2").onclick=function(){pinned=true;setMap(i.n+" "+i.a+" Hà Nội",17);document.getElementById("gmap").scrollIntoView({behavior:"smooth",block:"center"})};
-  L.appendChild(c);n++;vis.push(o)});
- document.getElementById("cnt").textContent=n+" địa điểm";
- if(!n)L.innerHTML='<p class="lead">Chưa có địa điểm trong phạm vi này. Hãy tăng khoảng cách.</p>';
- drawMap(vis);
- var nr=rank()[0],hn=document.getElementById("hc-near");if(hn&&nr&&nr.m!==null)hn.textContent=nr.i.n+" · "+fmt(nr.m);
-}
-document.querySelectorAll("#tabs .tab").forEach(function(b){b.onclick=function(){
- document.querySelectorAll("#tabs .tab").forEach(function(o){o.setAttribute("aria-pressed",o===b)});kind=b.dataset.k;render();catMap()}});
-var r=document.getElementById("rng");
-function rv(){document.getElementById("rv").textContent=max.toLocaleString("vi-VN")+" m"}
-r.oninput=function(){max=+r.value;rv();render()};
-var lb=document.getElementById("loc"),lm=document.getElementById("locmsg"),lastP=null;
-function stopLoc(){if(watchId!==null&&navigator.geolocation){navigator.geolocation.clearWatch(watchId)}watchId=null;origin=null;lb.textContent="📍 Dùng vị trí hiện tại của tôi";lm.textContent="Đang tính khoảng cách từ NEU.";r.max=6000;r.step=100;if(max>6000)max=6000;r.value=max;rv();render();if(!pinned)catMap()}
-lb.onclick=function(){
- if(origin||watchId!==null){stopLoc();return}
- if(!navigator.geolocation){lm.textContent="Thiết bị hoặc trình duyệt không hỗ trợ định vị.";return}
- lm.textContent="Đang xác định vị trí...";
- watchId=navigator.geolocation.watchPosition(function(p){
-  var np=[p.coords.latitude,p.coords.longitude];
-  if(lastP&&hav(lastP[0],lastP[1],np[0],np[1])<30)return;
-  lastP=np;origin=np;lb.textContent="🏫 Quay lại tính từ NEU";
-  r.max=30000;r.step=500;
-  lm.textContent="Đang theo dõi vị trí của bạn (sai số khoảng "+Math.round(p.coords.accuracy)+" m).";render();if(!pinned)catMap()},
- function(){watchId=null;lm.textContent="Không lấy được vị trí. Hãy cho phép quyền vị trí, hoặc mở trang trong tab riêng của trình duyệt."},
- {enableHighAccuracy:true,timeout:15000,maximumAge:5000})};
-render();catMap();
-
-(function(){
-var vnd=function(n){return Math.round(n).toLocaleString("vi-VN")+"đ"};
-var $=function(i){return document.getElementById(i)};
-var num=function(e){return +String(e.value).replace(/\D/g,"")||0};
-var money=function(e){var n=num(e);e.value=n?n.toLocaleString("vi-VN"):""};
-/* Gợi ý món */
-var dishes=[{n:"Cơm tấm sườn trứng",p:35000,t:["nhanh"],w:"Quán cơm bình dân"},{n:"Bún riêu cua",p:30000,t:["nuoc"],w:"Quán bún"},{n:"Bánh mì trứng ốp la",p:15000,t:["nhanh"],w:"Xe bánh mì đầu ngõ"},{n:"Phở gà",p:35000,t:["nuoc","lanh"],w:"Quán phở"},{n:"Cơm rau luộc, đậu sốt cà",p:25000,t:["lanh","nhanh"],w:"Cơm chay"},{n:"Mì cay hải sản",p:45000,t:["cay","nuoc"],w:"Quán mì cay"},{n:"Bún chả",p:40000,t:["nhanh"],w:"Quán bún chả"},{n:"Salad gà áp chảo",p:55000,t:["lanh","nhanh"],w:"Tiệm ăn healthy"},{n:"Bánh tráng trộn",p:20000,t:["cay","nhanh"],w:"Xe ăn vặt"},{n:"Cháo trứng bắc thảo",p:25000,t:["nuoc","lanh"],w:"Quán cháo"},{n:"Lẩu thái mini",p:70000,t:["cay","nuoc"],w:"Quán lẩu sinh viên"},{n:"Xôi mặn thập cẩm",p:20000,t:["nhanh"],w:"Xôi sáng"}];
-var sel={},bud=35000;
-$("m-b").oninput=function(){bud=+this.value;$("m-bv").textContent=vnd(bud)};
-document.querySelectorAll("#m-chips .chip").forEach(function(c){c.onclick=function(){var k=c.dataset.t;sel[k]=!sel[k];c.setAttribute("aria-pressed",!!sel[k])}});
-function suggest(){var ks=Object.keys(sel).filter(function(k){return sel[k]});
- var l=dishes.filter(function(d){return d.p<=bud&&ks.every(function(k){return d.t.indexOf(k)>-1})}).sort(function(){return Math.random()-.5});
- var r=$("m-res");r.innerHTML="";
- if(!l.length){r.innerHTML='<p class="sub" style="margin-top:10px">Chưa có món hợp. Thử tăng ngân sách hoặc bỏ bớt một nhu cầu.</p>';return}
- l.slice(0,3).forEach(function(d){var e=document.createElement("div");e.className="dish";e.innerHTML="<div><strong></strong><small></small></div><span class='price'></span>";
-  e.querySelector("strong").textContent=d.n;e.querySelector("small").textContent=d.w;e.querySelector(".price").textContent=vnd(d.p);r.appendChild(e)})}
-$("m-go").onclick=suggest;suggest();
-/* Sổ chi tiêu */
-var cats=[["an","Ăn uống",35,"#e8452c"],["tro","Nhà trọ, điện nước",30,"#0b2a6f"],["dilai","Đi lại",8,"#2e8bff"],["hoc","Học tập",10,"#18a37b"],["giaitri","Giải trí",8,"#8b5cf6"],["muasam","Mua sắm",5,"#ffc21a"],["khac","Khác",4,"#7a8499"]];
-var tipmap={an:"Ăn uống chiếm tỷ lệ cao. Thử nấu chung vài bữa mỗi tuần hoặc chọn quán dưới 35.000đ.",tro:"Tiền trọ chiếm phần lớn. Cân nhắc ở ghép hoặc hỏi lại giá điện nước.",dilai:"Đi lại tốn khá nhiều. Hãy so sánh vé tháng xe buýt ở mục Xe buýt.",hoc:"Chi cho học tập khá cao. Kiểm tra xem có thể mượn giáo trình ở thư viện không.",giaitri:"Giải trí vượt mức gợi ý. Đặt hạn mức cho mỗi cuối tuần.",muasam:"Mua sắm vượt mức gợi ý. Đợi 24 giờ trước khi mua món chưa thật cần.",khac:"Nhóm Khác khá lớn. Hãy ghi chú rõ để biết tiền đi đâu."};
-var S={inc:3000000,goal:20,ex:[]};
-var cs=$("x-cat");cats.forEach(function(c){var o=document.createElement("option");o.value=c[0];o.textContent=c[1];cs.appendChild(o)});
-try{var raw=localStorage.getItem("neu_expense");if(raw){var p=JSON.parse(raw);if(p&&p.ex)S=p}}catch(e){}
-function save(){try{localStorage.setItem("neu_expense",JSON.stringify(S))}catch(e){}}
-$("x-inc").value=S.inc.toLocaleString("vi-VN");$("x-goal").value=S.goal;$("x-gv").textContent=S.goal+"%";
-$("x-inc").oninput=function(){money(this);S.inc=num(this);save();calc()};
-$("x-goal").oninput=function(){S.goal=+this.value;$("x-gv").textContent=S.goal+"%";save();calc()};
-function msg(t){$("x-msg").textContent=t}
-function add(a,c,n){S.ex.push({id:Date.now()+Math.random(),a:a,c:c,n:n||"",d:new Date().toISOString().slice(0,10)});save();calc()}
-$("x-add").onclick=function(){var a=num($("x-amt"));if(!(a>0)){msg("Nhập số tiền lớn hơn 0 để thêm khoản chi.");return}
- add(a,cs.value,$("x-note").value.trim());$("x-amt").value="";$("x-note").value="";msg("Đã thêm khoản chi.")};
-$("x-amt").oninput=function(){money(this)};
-$("x-amt").onkeydown=function(e){if(e.key==="Enter")$("x-add").onclick()};
-$("x-demo").onclick=function(){S.ex=[];[[1000000,"tro","Tiền trọ"],[220000,"an","Ăn uống tuần đầu"],[40000,"dilai","Xe buýt"],[60000,"hoc","Giáo trình, in ấn"],[50000,"giaitri","Xem phim, cà phê"],[60000,"muasam","Đồ dùng cá nhân"],[20000,"khac","Linh tinh"]].forEach(function(x){S.ex.push({id:Date.now()+Math.random(),a:x[0],c:x[1],n:x[2],d:new Date().toISOString().slice(0,10)})});save();calc();msg("Đã nạp dữ liệu mẫu.")};
-$("x-clear").onclick=function(){S.ex=[];save();calc();msg("Đã xóa tất cả khoản chi.")};
-var last=null;
-function calc(){
- var now=new Date(),ym=now.toISOString().slice(0,7),dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate(),day=now.getDate();
- var ex=S.ex.filter(function(e){return e.d.slice(0,7)===ym});
- var tot={};cats.forEach(function(c){tot[c[0]]=0});ex.forEach(function(e){tot[e.c]=(tot[e.c]||0)+e.a});
- var spent=0;cats.forEach(function(c){spent+=tot[c[0]]});
- var fixed=tot.tro,varSp=spent-fixed,proj=fixed+varSp+varSp/Math.max(day,7)*(dim-day);
- var limit=S.inc*(1-S.goal/100),left=limit-spent,perDay=Math.max(0,left)/(dim-day+1);
- var ratio=limit>0?proj/limit:0,score=ratio<=1?Math.max(80,Math.round(100-Math.max(0,ratio-.8)*100)):Math.max(0,Math.round(80-(ratio-1)*160));
- var v=$("x-verdict");
- if(!spent){v.className="verdict v-mid";v.textContent="Chưa có khoản chi nào. Thêm khoản chi hoặc nạp dữ liệu mẫu để xem phân tích."}
- else if(proj<=limit){v.className="verdict v-good";v.textContent="Tiết kiệm tốt: với nhịp chi này, cuối tháng bạn dự kiến để dành khoảng "+vnd(S.inc-proj)+". Điểm "+score+"/100."}
- else if(proj<=S.inc){v.className="verdict v-mid";v.textContent="Cân bằng nhưng chưa đạt mục tiêu: dự kiến chi "+vnd(proj)+", vượt hạn mức tiết kiệm "+vnd(proj-limit)+". Điểm "+score+"/100."}
- else{v.className="verdict v-bad";v.textContent="Chi quá tay: dự kiến chi "+vnd(proj)+", vượt tiền sinh hoạt "+vnd(proj-S.inc)+". Điểm "+score+"/100."}
- $("x-kpi").innerHTML="";
- [["Đã chi",vnd(spent)],["Hạn mức chi",vnd(limit)],["Còn lại",vnd(left)],["Dự báo cuối tháng",vnd(proj)],["Nên chi mỗi ngày",vnd(perDay)]].forEach(function(k){var d=document.createElement("div");d.className="kpi";d.innerHTML="<small></small><b></b>";d.querySelector("small").textContent=k[0];d.querySelector("b").textContent=k[1];$("x-kpi").appendChild(d)});
- var acc=0,st=[];cats.forEach(function(c){var s=spent?tot[c[0]]/spent*100:0;if(s>0){st.push(c[3]+" "+acc+"% "+(acc+s)+"%");acc+=s}});
- $("x-donut").style.background=st.length?"conic-gradient("+st.join(",")+")":"var(--soft)";
- var B=$("x-bars");B.innerHTML="";var tips=[];
- cats.forEach(function(c){var s=spent?tot[c[0]]/spent*100:0,r=document.createElement("div");r.className="brow";
-  r.innerHTML='<div class="t"><span></span><span></span></div><div class="track"><i></i><u></u></div>';
-  r.querySelector(".t span").textContent=c[1];r.querySelectorAll(".t span")[1].textContent=Math.round(s)+"% · "+vnd(tot[c[0]]);
-  var i=r.querySelector("i");i.style.width=Math.min(100,s)+"%";i.style.background=c[3];r.querySelector("u").style.left=c[2]+"%";B.appendChild(r);
-  if(spent&&s>=c[2]+8)tips.push(tipmap[c[0]])});
- if(spent&&left<0)tips.unshift("Bạn đã chi vượt hạn mức tháng này "+vnd(-left)+". Tạm dừng các khoản chưa cần thiết.");
- if(spent&&!tips.length)tips.push("Cơ cấu chi tiêu khá hợp lý so với mức gợi ý. Giữ nhịp chi hiện tại để đạt mục tiêu tiết kiệm.");
- if(!spent)tips.push("Ghi lại mọi khoản chi trong vài ngày để phân tích chính xác hơn.");
- if(spent&&day<7)tips.push("Mới đầu tháng nên dự báo có thể chưa chính xác, hãy theo dõi thêm.");
- $("x-tips").innerHTML="";tips.forEach(function(t){var li=document.createElement("li");li.textContent=t;$("x-tips").appendChild(li)});
- var L2=$("x-list");L2.innerHTML="";
- if(!ex.length)L2.innerHTML='<p class="sub">Chưa có khoản chi nào.</p>';
- ex.slice(-8).reverse().forEach(function(e){var cn=cats.filter(function(c){return c[0]===e.c})[0][1],r=document.createElement("div");r.className="exp";
-  r.innerHTML='<span></span><span><b></b> <button aria-label="Xóa khoản chi">×</button></span>';
-  r.querySelector("span").textContent=cn+(e.n?" · "+e.n:"");r.querySelector("b").textContent=vnd(e.a);
-  r.querySelector("button").onclick=function(){S.ex=S.ex.filter(function(x){return x.id!==e.id});save();calc()};L2.appendChild(r)});
- last={spent:spent,proj:proj,limit:limit,left:left,tot:tot,score:score,perDay:perDay};
- var hb=document.getElementById("hc-bud");if(hb)hb.textContent=spent?vnd(perDay)+" mỗi ngày":"Chưa ghi chi tiêu";
-}
-calc();
-/* Vé xe buýt */
-function fare(){money($("f-tp"));money($("f-mp"));var tp=num($("f-tp")),mp=num($("f-mp")),t=+$("f-td").value,d=+$("f-dm").value;$("f-tdv").textContent=t;$("f-dmv").textContent=d;
- var s=tp*t*d;$("f-res").textContent=s>mp?"Nên mua vé tháng, tiết kiệm "+vnd(s-mp):"Mua vé lượt, rẻ hơn "+vnd(mp-s)}
-["f-tp","f-mp","f-td","f-dm"].forEach(function(i){$(i).oninput=fare});fare();
-/* Chat */
-function reply(t){t=t.toLowerCase();
- if(/phân tích|chi tiêu|tiết kiệm|tiền/.test(t)){if(!last||!last.spent)return "Bạn chưa ghi khoản chi nào. Vào mục Sổ chi tiêu để thêm khoản chi hoặc nạp dữ liệu mẫu.";
-  var top=cats.slice().sort(function(a,b){return last.tot[b[0]]-last.tot[a[0]]})[0];
-  return "Bạn đã chi "+vnd(last.spent)+", dự báo cuối tháng "+vnd(last.proj)+" (hạn mức "+vnd(last.limit)+"). Nhóm chi nhiều nhất là "+top[1]+". Điểm tiết kiệm "+last.score+"/100, nên chi khoảng "+vnd(last.perDay)+" mỗi ngày."}
- if(/xe buýt|bus|đi lại|tuyến/.test(t))return "Các tuyến đi qua NEU gồm 18, 47B, 21A, 21B, 25, 32, 23 và vài tuyến khác. Xem mục Xe buýt để so sánh vé lượt với vé tháng.";
- if(/học bài|cà phê|cafe/.test(t))return "Mục Quanh NEU có Canopy StudySpace (mở 24 giờ), Bee Coffee, coffee later? và các quán học bài khác, xếp theo khoảng cách.";
- if(/ăn|đói|cơm|bún|phở|rẻ/.test(t))return "Kéo thanh ngân sách ở mục Hôm nay ăn gì? để nhận gợi ý, hoặc xem quán thật quanh NEU kèm địa chỉ.";
- return "Mình chưa hiểu rõ. Bạn thử hỏi về chi tiêu, ăn uống, xe buýt hoặc quán học bài nhé."}
-var AI=null,hist=[];
-if(window.claude&&claude.use){claude.use("sample").then(function(s){AI=s}).catch(function(){})}
-function ctx(){var pl=items.filter(function(i){return i.m!==null}).slice(0,30).map(function(i){return i.n+" ("+i.a+", cách NEU "+i.m+" m, "+i.p+")"}).join("; ");
- var s=last&&last.spent?"Chi tiêu tháng này: đã chi "+vnd(last.spent)+", hạn mức "+vnd(last.limit)+", dự báo cuối tháng "+vnd(last.proj)+", điểm tiết kiệm "+last.score+"/100.":"Người dùng chưa nhập chi tiêu.";
- return "Bạn là trợ lý của trang Dynamic NEU, hỗ trợ sinh viên Đại học Kinh tế Quốc dân (207 Giải Phóng, Hà Nội) về chi tiêu, ăn uống, đi lại, giải trí. Trả lời bằng tiếng Việt, dưới 120 từ, không bịa địa chỉ hay giá ngoài dữ liệu dưới đây. Thiếu dữ liệu thì nói rõ.\nQuán quanh NEU: "+pl+"\nTuyến xe buýt qua NEU: 18, 47B, 21A, 21B, 25, 32, 23, 03, 03B, 08, 19, 24, 26, 28, 41.\n"+s}
-function ask(t){if(!t.trim())return;var c=$("c-chat"),a=document.createElement("div");a.className="msg me";a.textContent=t;c.appendChild(a);
- var b=document.createElement("div");b.className="msg ai";b.textContent="Đang trả lời...";c.appendChild(b);c.scrollTop=c.scrollHeight;
- function fb(){b.textContent=reply(t);c.scrollTop=c.scrollHeight}
- if(!AI){setTimeout(fb,300);return}
- AI(ctx()+"\nLịch sử:\n"+hist.slice(-6).join("\n")+"\nCâu hỏi: "+t,{cache:false,onText:function(r){b.textContent=r.text;c.scrollTop=c.scrollHeight}}).then(function(r){b.textContent=r.text||reply(t);hist.push("Sinh viên: "+t,"Trợ lý: "+(r.text||""))}).catch(fb)}
-$("c-send").onclick=function(){ask($("c-q").value);$("c-q").value=""};
-$("c-q").onkeydown=function(e){if(e.key==="Enter"){ask($("c-q").value);$("c-q").value=""}};
-document.querySelectorAll("#c-quick .chip").forEach(function(c){c.onclick=function(){ask(c.textContent)}});
-$("x-aibtn").onclick=function(){var o=$("x-ai");o.style.display="block";
- if(!last||!last.spent){o.textContent="Hãy thêm vài khoản chi trước để AI có số liệu phân tích.";return}
- if(!AI){o.textContent="AI chưa sẵn sàng hoặc chưa được cấp quyền. Nhận xét tự động ở trên vẫn dùng được.";return}
- o.textContent="AI đang phân tích...";
- var rows=cats.map(function(c){return c[1]+": "+vnd(last.tot[c[0]])+" (gợi ý tối đa "+c[2]+"%)"}).join("; ");
- var q=ctx()+"\nDữ liệu chi tiêu: tiền sinh hoạt "+vnd(S.inc)+", mục tiêu tiết kiệm "+S.goal+"%, theo nhóm: "+rows+".\nNhiệm vụ: đánh giá ngắn gọn tình hình, nêu 3 việc cụ thể nên làm để tiết kiệm, ưu tiên gợi ý từ quán và tuyến xe buýt có trong dữ liệu. Dưới 180 từ, đánh số 1 đến 3.";
- AI(q,{cache:false,onText:function(x){o.textContent=x.text}}).then(function(x){o.textContent=x.text||"AI chưa trả lời, hãy thử lại."}).catch(function(){o.textContent="Không gọi được AI. Hãy thử lại sau."})};
-})();
-(function(){
-var views=["home","chitieu","quanh","xebuyt","hoi"];
-function show(v){if(views.indexOf(v)<0)v="home";
- views.forEach(function(x){document.getElementById("v-"+x).hidden=x!==v});
- document.querySelectorAll("#nav button").forEach(function(b){b.setAttribute("aria-current",b.dataset.v===v?"page":"false")});
- if(location.hash!=="#"+v)location.hash=v;window.scrollTo(0,0)}
-document.querySelectorAll("#nav button").forEach(function(b){b.onclick=function(){show(b.dataset.v)}});
-document.querySelectorAll(".tile").forEach(function(t){t.onclick=function(){
- if(t.dataset.kind){var tb=document.querySelector('#tabs .tab[data-k="'+t.dataset.kind+'"]');if(tb)tb.click()}
- show(t.dataset.go);
- if(t.dataset.scroll){var e=document.getElementById(t.dataset.scroll);if(e)e.scrollIntoView({behavior:"smooth"})}}});
-document.getElementById("qs").oninput=function(){sq=this.value.trim().toLowerCase();if(sq)show("quanh");render()};
-window.addEventListener("hashchange",function(){show(location.hash.slice(1))});
-show(location.hash.slice(1)||"home");
-})();
-</script></body></html>
+<header class="hd"><div class="kv"><img src="data:image/jpeg;base64,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EBESBRMUITAgIgYVIzAyQDVQJDRBE2BwJUT/2gAIAQEAAQUC40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a4sa4sa4sa4sa4sa4sa4sa4sa4rFxWLisXFYt2rdq3atgshZCyFkLIWQshZCyFs1bArYLIWzVu1btWzVs1bNWzVsFkLoshbNWQshZCyFkLYLZq2atmrZq2ashZCyFsFs1bNWwWRbIWQi4BcRi4jFxGLisXFYuKxcVi40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a40a
