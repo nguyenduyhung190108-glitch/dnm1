@@ -3,641 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STYLE - Thời Trang Đẳng Cấp</title>
+    <title>Phòng Thử Đồ 3D (Virtual Try-On Room)</title>
     <style>
-        * {
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
+            background-color: #141414;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f5f2;
-            color: #333;
-            line-height: 1.6;
-        }
-
-        /* Header */
-        .header {
-            background-color: #1a1a1a;
-            padding: 20px 0;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 40px;
-        }
-
-        .logo {
-            font-size: 28px;
-            font-weight: bold;
-            color: #fff;
-            text-decoration: none;
-            letter-spacing: 3px;
-        }
-
-        .logo span {
-            color: #e74c3c;
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 30px;
-            list-style: none;
-        }
-
-        .nav-menu li a {
-            color: #ccc;
-            text-decoration: none;
-            font-size: 16px;
-            transition: color 0.3s ease;
-        }
-
-        .nav-menu li a:hover {
-            color: #e74c3c;
-        }
-
-        .nav-menu li.active a {
-            color: #e74c3c;
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            cursor: pointer;
-        }
-
-        .mobile-menu-btn span {
-            width: 25px;
-            height: 3px;
-            background-color: #fff;
-            border-radius: 3px;
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 150px 20px 100px;
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .hero h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            animation: fadeIn 1s ease-in;
-        }
-
-        .hero p {
-            font-size: 18px;
-            margin-bottom: 30px;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-            opacity: 0.9;
-        }
-
-        .hero-btn {
-            background-color: #e74c3c;
-            color: white;
-            padding: 15px 40px;
-            border: none;
-            border-radius: 50px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            animation: pulse 2s infinite;
-        }
-
-        .hero-btn:hover {
-            background-color: #c0392b;
-            transform: translateY(-5px);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        /* Product Section */
-        .product-section {
-            max-width: 1200px;
-            margin: 50px auto;
-            padding: 0 40px;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 36px;
-            margin-bottom: 40px;
-            color: #1a1a1a;
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 80px;
-            height: 3px;
-            background-color: #e74c3c;
-            margin: 15px auto 0;
-        }
-
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
-        }
-
-        .product-card {
-            background-color: white;
-            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            cursor: pointer;
         }
 
-        .product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        /* Khung hiển thị mô hình */
+        model-viewer {
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle, #2c2c2c 0%, #121212 100%);
         }
 
-        .product-image {
-            width: 100%;
-            height: 300px;
-            background: linear-gradient(45deg, #f5f7fa 0%, #c3cfe2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 60px;
+        /* Thanh Menu chọn quần áo bên phải */
+        .closet-menu {
+            position: absolute;
+            top: 50%;
+            right: 30px;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.85);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+            width: 220px;
         }
 
-        .product-info {
-            padding: 20px;
-        }
-
-        .product-name {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #1a1a1a;
-        }
-
-        .product-price {
-            color: #e74c3c;
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .product-price span {
-            font-size: 14px;
-            color: #888;
-            font-weight: normal;
-        }
-
-        .product-btn {
-            background-color: #1a1a1a;
-            color: white;
-            padding: 10px 25px;
-            border: none;
-            border-radius: 25px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-
-        .product-btn:hover {
-            background-color: #e74c3c;
-        }
-
-        /* Categories Section */
-        .categories {
-            background-color: #1a1a1a;
-            padding: 80px 20px;
-            margin-top: 50px;
-        }
-
-        .categories-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-        }
-
-        .category-card {
-            background-color: #2a2a2a;
-            padding: 40px;
-            border-radius: 15px;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .category-card:hover {
-            background-color: #3a3a3a;
-            transform: scale(1.05);
-        }
-
-        .category-icon {
-            font-size: 50px;
+        h3 {
+            color: #fff;
+            margin-top: 0;
             margin-bottom: 20px;
-        }
-
-        .category-title {
-            font-size: 22px;
-            font-weight: bold;
-            color: #e74c3c;
-            margin-bottom: 10px;
-        }
-
-        .category-desc {
-            color: #aaa;
-            font-size: 14px;
-        }
-
-        /* Newsletter Section */
-        .newsletter {
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-            padding: 80px 20px;
             text-align: center;
-            color: white;
-            margin-top: 50px;
-        }
-
-        .newsletter h2 {
-            font-size: 36px;
-            margin-bottom: 15px;
-        }
-
-        .newsletter p {
             font-size: 16px;
-            margin-bottom: 30px;
-            opacity: 0.9;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
-        .newsletter-form {
-            display: flex;
-            max-width: 500px;
-            margin: 0 auto;
-            gap: 10px;
-        }
-
-        .newsletter-input {
-            flex: 1;
-            padding: 15px 20px;
-            border: none;
-            border-radius: 30px;
-            font-size: 16px;
-            outline: none;
-        }
-
-        .newsletter-btn {
-            background-color: #1a1a1a;
-            color: white;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: bold;
+        /* Các nút bấm chọn đồ */
+        .cloth-option {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            background: #222;
+            color: #ddd;
+            border: 1px solid #444;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .newsletter-btn:hover {
-            background-color: #000;
-        }
-
-        /* Footer */
-        .footer {
-            background-color: #1a1a1a;
-            padding: 60px 20px 20px;
-            color: #aaa;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        .footer-section h3 {
-            color: white;
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
-
-        .footer-section ul {
-            list-style: none;
-        }
-
-        .footer-section ul li {
-            margin-bottom: 10px;
-        }
-
-        .footer-section ul li a {
-            color: #aaa;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .footer-section ul li a:hover {
-            color: #e74c3c;
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid #333;
             font-size: 14px;
+            transition: all 0.3s ease;
+            text-align: left;
         }
 
-        /* Animation */
-        .fade-in {
-            animation: fadeIn 1s ease;
+        .cloth-option:hover {
+            background: #007bff;
+            color: #fff;
+            border-color: #007bff;
+            transform: translateX(-5px);
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .nav-menu {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 70px;
-                left: 0;
-                width: 100%;
-                background-color: #1a1a1a;
-                padding: 20px;
-            }
+        .cloth-option.active {
+            background: #28a745;
+            color: #fff;
+            border-color: #28a745;
+            font-weight: bold;
+        }
 
-            .nav-menu.active {
-                display: flex;
-            }
-
-            .mobile-menu-btn {
-                display: flex;
-            }
-
-            .hero h1 {
-                font-size: 32px;
-            }
-
-            .product-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .newsletter-form {
-                flex-direction: column;
-            }
+        /* Hướng dẫn dưới màn hình */
+        .tip {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #aaa;
+            background: rgba(0,0,0,0.6);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="header-content">
-            <a href="#" class="logo">STYLE<span>.</span></a>
-            <ul class="nav-menu">
-                <li class="active"><a href="#">Trang Chủ</a></li>
-                <li><a href="#">Phụ Nữ</a></li>
-                <li><a href="#">Nam</a></li>
-                <li><a href="#">Accessories</a></li>
-                <li><a href="#">Sale</a></li>
-            </ul>
-            <div class="mobile-menu-btn" onclick="toggleMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            <div style="display: flex; gap: 20px;">
-                <button onclick="toggleCart()" style="background: none; border: none; cursor: pointer; font-size: 16px;">🛒</button>
-                <button onclick="toggleSearch()" style="background: none; border: none; cursor: pointer; font-size: 18px;">🔍</button>
-            </div>
-        </div>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1 class="fade-in">Thời Trang<br>Đẳng Cấp</h1>
-        <p class="fade-in">Khám phá bộ sưu tập mới nhất với thiết kế độc đáo và chất lượng cao cấp. Nâng tầm phong cách của bạn với STYLE!</p>
-        <a href="#products" class="hero-btn fade-in">Xem Ngay</a>
-    </section>
+    <!-- Khung hiển thị mô hình 3D - Mặc định load bộ trang phục số 1 -->
+    <model-viewer 
+        id="avatar-viewer"
+        src="https://githubusercontent.com" 
+        alt="Mô hình người thử đồ 3D" 
+        camera-controls 
+        shadow-intensity="1.5"
+        shadow-softness="0.5"
+        exposure="1.0"
+        environment-image="neutral"
+        ar>
+    </model-viewer>
 
-    <!-- Products Section -->
-    <section id="products" class="product-section fade-in">
-        <h2 class="section-title">Sản Phẩm Nổi Bật</h2>
-        <div class="product-grid">
-            <!-- Product 1 -->
-            <div class="product-card">
-                <div class="product-image">👗</div>
-                <div class="product-info">
-                    <div class="product-name">Váy Dạ Phố</div>
-                    <div class="product-price">899<span>đ</span></div>
-                    <button class="product-btn">Thêm vào giỏ</button>
-                </div>
-            </div>
-            <!-- Product 2 -->
-            <div class="product-card">
-                <div class="product-image">👔</div>
-                <div class="product-info">
-                    <div class="product-name">Áo Khoác Bò Cạp</div>
-                    <div class="product-price">1299<span>đ</span></div>
-                    <button class="product-btn">Thêm vào giỏ</button>
-                </div>
-            </div>
-            <!-- Product 3 -->
-            <div class="product-card">
-                <div class="product-image">👠</div>
-                <div class="product-info">
-                    <div class="product-name">Đ Dép Cao Gót</div>
-                    <div class="product-price">599<span>đ</span></div>
-                    <button class="product-btn">Thêm vào giỏ</button>
-                </div>
-            </div>
-            <!-- Product 4 -->
-            <div class="product-card">
-                <div class="product-image">👜</div>
-                <div class="product-info">
-                    <div class="product-name">Túi Da Xách</div>
-                    <div class="product-price">1599<span>đ</span></div>
-                    <button class="product-btn">Thêm vào giỏ</button>
-                </div>
-            </div>
-            <!-- Product 5 -->
-            <div class="product-card">
-                <div class="product-image">🕶️</div>
-                <div class="product-info">
-                    <div class="product-name">Kính M戴着</div>
-                    <div class="product-price">299<span>đ</span></div>
-                    <button class="product-btn">Thêm vào giỏ</button>
-                </div>
-            </div>
-            <!-- Product 6 -->
-            <div class="product-card">
-                <div class="product-image">💍</div>
-                <div class="product-info">
-                    <div class="product-name">Vòng Tay Bạc</div>
-                    <div class="product-price">399<span>đ</span></div>
-                    <button class="product-btn">Thêm vào giỏ</button>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- Tủ đồ để chọn thay đổi áo quần -->
+    <div class="closet-menu">
+        <h3>Tủ Đồ 3D Online</h3>
+        
+        <button class="cloth-option active" onclick="changeOutfit(this, 'casual')">
+            👗 1. Đồ Thường Nhật (Gốc)
+        </button>
+        
+        <button class="cloth-option" onclick="changeOutfit(this, 'blazer')">
+            🧥 2. Áo Khoác Blazer
+        </button>
+        
+        <button class="cloth-option" onclick="changeOutfit(this, 'patchwork')">
+            🎨 3. Áo Khoác Họa Tiết
+        </button>
+    </div>
 
-    <!-- Categories Section -->
-    <section class="categories">
-        <h2 class="section-title" style="color: white;">Danh Mục</h2>
-        <div class="categories-grid">
-            <div class="category-card">
-                <div class="category-icon">👗</div>
-                <div class="category-title">Áo</div>
-                <div class="category-desc">Bộ sưu tập áo thời trang đa dạng</div>
-            </div>
-            <div class="category-card">
-                <div class="category-icon">👖</div>
-                <div class="category-title">Quần</div>
-                <div class="category-desc">Chất liệu cao cấp, thiết kế hiện đại</div>
-            </div>
-            <div class="category-card">
-                <div class="category-icon">👗</div>
-                <div class="category-title">Váy</div>
-                <div class="category-desc">Váy đa dạng phong cách và màu sắc</div>
-            </div>
-            <div class="category-card">
-                <div class="category-icon">👕</div>
-                <div class="category-title">Áo Thun</div>
-                <div class="category-desc">Áo thun cotton mềm mại</div>
-            </div>
-            <div class="category-card">
-                <div class="category-icon">🧥</div>
-                <div class="category-title">Áo的外</div>
-                <div class="category-desc">Áo khoác đẹp và ấm áp</div>
-            </div>
-            <div class="category-card">
-                <div class="category-icon">👠</div>
-                <div class="category-title">Dép</div>
-                <div class="category-desc">Dép thời trang và tiện nghi</div>
-            </div>
-            <div class="category-card">
-                <div class="category-icon">👜</div>
-                <div class="category-title">Túi Xách</div>
-                <div class="category-desc">Túi xách sang trọng</div>
-            </div>
-            <div class="category-card">
-                <div class="category-icon">🕶️</div>
-                <div class="category-title">Kính</div>
-                <div class="category-desc">Kính râm thời trang</div>
-            </div>
-        </div>
-    </section>
+    <div class="tip">Xoay chuột để xem form dáng quần áo ở các góc độ</div>
 
-    <!-- Newsletter Section -->
-    <section class="newsletter fade-in">
-        <h2>Đăng Ký Nhận Tin</h2>
-        <p>Nhận ngay các ưu đãi, xu hướng thời trang mới nhất!</p>
-        <form class="newsletter-form">
-            <input type="email" class="newsletter-input" placeholder="Nhập email của bạn" required>
-            <button type="submit" class="newsletter-btn">Đăng Ký</button>
-        </form>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Về STYLE</h3>
-                <p>STYLE là thương hiệu thời trang uy tín với các sản phẩm chất lượng cao, thiết kế hiện đại, phù hợp với mọi lứa tuổi.</p>
-            </div>
-            <div class="footer-section">
-                <h3>Liên Kết</h3>
-                <ul>
-                    <li><a href="#">Trang Chủ</a></li>
-                    <li><a href="#">Sản Phẩm</a></li>
-                    <li><a href="#">Về Chúng Tôi</a></li>
-                    <li><a href="#">Chính Sách</a></li>
-                    <li><a href="#">Liên Hệ</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Hỗ Trợ</h3>
-                <ul>
-                    <li><a href="#">Hướng Dẫnsize</a></li>
-                    <li><a href="#">Chính Sách Đổi Trả</a></li>
-                    <li><a href="#">Phân Phối</a></li>
-                    <li><a href="#">Tư Vấn 24/7</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>theo Dõi Chúng Tôi</h3>
-                <div style="display: flex; gap: 15px;">
-                    <button style="background: none; border: none; color: #aaa; font-size: 24px; cursor: pointer;">📘</button>
-                    <button style="background: none; border: none; color: #aaa; font-size: 24px; cursor: pointer;">📸</button>
-                    <button style="background: none; border: none; color: #aaa; font-size: 24px; cursor: pointer;">🎵</button>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 STYLE. All Rights Reserved.</p>
-        </div>
-    </footer>
+    <!-- Nhúng thư viện kết xuất của Google -->
+    <script type="module" src="https://googleapis.com"></script>
 
     <script>
-        // Toggle mobile menu
-        function toggleMenu() {
-            document.querySelector('.nav-menu').classList.toggle('active');
-        }
+        // Danh sách các link file mô hình quần áo đã được mặc sẵn lên người tương ứng
+        const outfits = {
+            'casual': 'https://githubusercontent.com',
+            'blazer': 'https://githubusercontent.com',
+            'patchwork': 'https://githubusercontent.com'
+        };
 
-        // Toggle cart
-        function toggleCart() {
-            const cartBtn = document.querySelector('.header-content button');
-            cartBtn.innerHTML = cartBtn.innerHTML.includes('🛒') 
-                ? '🛒' 
-                : '✅';
-            alert('Giỏ hàng đã được mở!');
+        function changeOutfit(buttonElement, outfitKey) {
+            const viewer = document.getElementById('avatar-viewer');
+            
+            // 1. Cập nhật link mô hình mới dựa trên nút bấm
+            viewer.src = outfits[outfitKey];
+            
+            // 2. Đổi trạng thái hiển thị màu sắc nút Active
+            document.querySelectorAll('.cloth-option').forEach(btn => btn.classList.remove('active'));
+            buttonElement.classList.add('active');
         }
-
-        // Toggle search
-        function toggleSearch() {
-            alert('Phím tìm kiếm sẽ mở ra');
-        }
-
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
     </script>
 </body>
 </html>
